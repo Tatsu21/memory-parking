@@ -4,7 +4,7 @@
 #include <cstring>
 #include <fstream>
 #include <list>
-#include "Utils.h"
+#include "Utils.cpp"
 
 
 #define SIZE_OF_PHOTO 200;
@@ -29,74 +29,59 @@ Mat PercentOnImage(Mat img, float percent) {
 
 	return img;
 }
-void AKAZEe(Feature feature, string pimg, int w,int h) {
+Feature AKAZEe(Feature feature, string pimg, int w,int h, int type, AKAZE::DescriptorType descriptor_type = AKAZE::DESCRIPTOR_KAZE, int descriptor_size = 64, int descriptor_channels = 3,
+								float threshold = 0.0012f, int nOctaves = 5, int nOctaveLayers = 5, KAZE::DiffusivityType diffusivity = KAZE::DIFF_PM_G1) {
 	Mat img = imread(pimg), des;
 	if (img.empty()) {
 		cout << "Could not open or find the image!\n" << endl;
 	
-	}else{
-		resize(img, img, Size(w, h), 0.75, 0.75);
-		Ptr<AKAZE> detector = AKAZE::create(AKAZE::DESCRIPTOR_KAZE, 64, 3, 0.0012f, 5, 5, KAZE::DIFF_PM_G1);
-		vector<KeyPoint> kp;
-		detector->detectAndCompute(img, noArray(), kp, des);
 	}
+	else {
+		if (type == 1) {
+			resize(img, img, Size(w, h), 0.75, 0.75);
+			Ptr<AKAZE> detector = AKAZE::create(descriptor_type, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaves, diffusivity);
+			vector<KeyPoint> kp;
+			detector->detectAndCompute(img, noArray(), kp, des);
+			feature.AddDes1(des);
+			feature.AddKp1(kp);
+			feature.addImg1(img);
+		}
+		else if (type == 2) {
+			resize(img, img, Size(w, h), 0.75, 0.75);
+			Ptr<AKAZE> detector = AKAZE::create(descriptor_type, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaves, diffusivity);
+			vector<KeyPoint> kp;
+
+			detector->detectAndCompute(img, noArray(), kp, des);
+			feature.AddDes2(des);
+			feature.AddKp2(kp);
+			feature.addImg2(img);
+		}
+	}
+	return feature;
 }
 
 int main()
 {	
-	Mat imgg = imread("26.jpg");
+
 	const String path1 = "img/";
 	string* imgs = ReadFile(path1);
 	int nr = 0;
+	Feature feature;
 	string nrs;
-	if (imgg.empty()) {
-		cout << "Could not open or find the image!\n" << endl;
-		return -1;
+	Mat img_matches, des1, des2;
+	feature = AKAZEe(feature, "26.jpg", 750, 750, 1, AKAZE::DESCRIPTOR_KAZE, 64, 3, 0.0012f, 5, 5, KAZE::DIFF_PM_G1);
+	
+	for (int i = 0; i < 26; i++) {
+		feature = AKAZEe(feature, path1 + imgs[i] + ".jpg", 750, 750, 2, AKAZE::DESCRIPTOR_KAZE, 64, 3, 0.0012f, 5, 5, KAZE::DIFF_PM_G1);
 	}
-	resize(imgg, imgg, Size(750, 750), 0.75, 0.75);
-	Ptr<AKAZE> detector = AKAZE::create(AKAZE::DESCRIPTOR_KAZE, 64, 3, 0.0012f, 5, 5, KAZE::DIFF_PM_G1);
-	vector<KeyPoint> kp1, kp2;
-	Mat des1, des2, img_matches;
-	detector->detectAndCompute(imgg, noArray(), kp1, des1);
 	//Images
-	for(int i= 0; i< 26; i++){
-		Mat img = imread(path1+imgs[i]+".jpg");
-
-		resize(img, img,Size(750, 750), 0.75, 0.75);
-		if (img.empty()) {
-			cout << "Could not open or find the image!\n" << endl;
-			cout << path1 + imgs[i] + ".jpg";
-			return -1;
-		}
-		cout << path1 + imgs[i] + ".jpg"<<endl;
-	    // VIDEOS
-		//for (int i = 0; i < 13; i++) {
-		//	//Mat img2 = imread(path2, IMREAD_GRAYSCALE);
-		//	VideoCapture cap(path2+vid[i]+".mp4");
-		//	if (!cap.isOpened()) {
-		//		cout << "Could not open or find the video!\n" << endl;
-		//		cout << path2 + vid[i] + ".mp4";
-		//		return -1;
-		//	}
-		//	cout << path2 + vid[i] + ".mp4" <<endl;
-
-
-		//	while (true)
-		//	{
-		//		Mat frame, gray,res;
-		//		cap >> frame;
-		//		if (frame.empty())
-		//			break;
-		//		//cvtColor(frame, gray, COLOR_BGR2GRAY);
-		//		
-
-
-		//		resize(frame, frame, cv::Size(300, 300), 0.75, 0.75);
-		detector->detectAndCompute(img, noArray(), kp2, des2);
+	for(int i= 0; i< (int)feature.RetunImg2().size(); i++){
 		try{
-			Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::BRUTEFORCE_L1);
+			Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::BRUTEFORCE);
 			vector<vector <DMatch>> matches;
 			vector <DMatch>good_matches;
+			feature.RetunDes1()[0].convertTo(des1, CV_32F);
+			feature.RetunDes2()[i].convertTo(des2, CV_32F);
 	    	matcher->knnMatch(des1, des2, matches,2);
 					//-- Filter matches using the Lowe's ratio test
 			const float ratio_thresh = 0.8f;
@@ -109,9 +94,9 @@ int main()
 					}
 				}
 			}
-			float percent = (((float)good_matches.size() / (float)des1.cols) * (float)100);
+			float percent = (((float)good_matches.size() / (float)feature.RetunDes1()[0].cols) * (float)100);
 			cout << percent << endl;
-			drawMatches(imgg, kp1, img, kp2, good_matches, img_matches, Scalar::all(-1),
+			drawMatches(feature.RetunImg1()[0], feature.ReturnKp1()[0], feature.RetunImg2()[i], feature.ReturnKp2()[i], good_matches, img_matches, Scalar::all(-1),
 						Scalar::all(-1), std::vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 			img_matches = PercentOnImage(img_matches, percent);
 			imshow("Matches", img_matches);
