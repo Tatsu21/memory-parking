@@ -77,6 +77,36 @@ Feature AKAZEe(Feature feature, string pimg,string mimg, int w,int h, int type, 
 	return feature;
 }
 
+Feature KAZEe(Feature feature, string pimg, int w, int h, int type, bool extended = false, bool upright = false, float threshold = 0.001f, int nOctaves = 4, int nOctaveLayers = 4, KAZE::DiffusivityType diffusivity = KAZE::DIFF_PM_G2){
+	Mat img = imread(pimg), des;
+
+	if (img.empty()) {
+		cout << "Could not open or find the image!\n" << endl;
+
+	}
+	else {
+		if (type == 1) {
+			resize(img, img, Size(w, h), 0.75, 0.75);
+			Ptr<KAZE> detector = KAZE::create(extended, upright, threshold, nOctaveLayers, diffusivity);
+			vector<KeyPoint> kp;
+			detector->detectAndCompute(img, noArray(), kp, des);
+			feature.AddDes1(des);
+			feature.AddKp1(kp);
+			feature.addImg1(img);
+		}
+		else if (type == 2) {
+			resize(img, img, Size(w, h), 0.75, 0.75);
+			Ptr<KAZE> detector = KAZE::create(extended, upright, threshold, nOctaveLayers, diffusivity);
+			vector<KeyPoint> kp;
+
+			detector->detectAndCompute(img, noArray(), kp, des);
+			feature.AddDes2(des);
+			feature.AddKp2(kp);
+			feature.addImg2(img);
+		}
+	}
+	return feature;
+}
 int main()
 {	
 
@@ -88,8 +118,10 @@ int main()
 	string nrs;
 	Mat img_matches, des1, des2;
 	feature = AKAZEe(feature, "26.jpg", "26seg.jpg", 750, 750, 1, AKAZE::DESCRIPTOR_KAZE, 64, 3, 0.0012f, 5, 5, KAZE::DIFF_PM_G1);
-	
+	//feature = KAZEe(feature, "26.jpg", 750, 750, 1);
+
 	for (int i = 0; i < 26; i++) {
+		//feature = KAZEe(feature, path1 + imgs[i] + ".jpg", 750, 750, 2);
 		feature = AKAZEe(feature, path1 + imgs[i] + ".jpg", mpath + imgs[i] + ".jpg", 750, 750, 2, AKAZE::DESCRIPTOR_KAZE, 64, 3, 0.0012f, 5, 5, KAZE::DIFF_PM_G1);
 	}
 	//Images
