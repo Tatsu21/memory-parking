@@ -29,36 +29,36 @@ Mat PercentOnImage(Mat img, float percent) {
 
 	return img;
 }
-//Feature AKAZEe(Feature feature, string pimg, int w,int h, int type, AKAZE::DescriptorType descriptor_type = AKAZE::DESCRIPTOR_KAZE, int descriptor_size = 64, int descriptor_channels = 3,
-//								float threshold = 0.0012f, int nOctaves = 5, int nOctaveLayers = 5, KAZE::DiffusivityType diffusivity = KAZE::DIFF_PM_G1) {
-//	Mat img = imread(pimg), des;
-//	if (img.empty()) {
-//		cout << "Could not open or find the image!\n" << endl;
-//	
-//	}
-//	else {
-//		if (type == 1) {
-//			resize(img, img, Size(w, h), 0.75, 0.75);
-//			Ptr<AKAZE> detector = AKAZE::create(descriptor_type, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaves, diffusivity);
-//			vector<KeyPoint> kp;
-//			detector->detectAndCompute(img, noArray(), kp, des);
-//			feature.AddDes1(des);
-//			feature.AddKp1(kp);
-//			feature.addImg1(img);
-//		}
-//		else if (type == 2) {
-//			resize(img, img, Size(w, h), 0.75, 0.75);
-//			Ptr<AKAZE> detector = AKAZE::create(descriptor_type, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaves, diffusivity);
-//			vector<KeyPoint> kp;
-//
-//			detector->detectAndCompute(img, noArray(), kp, des);
-//			feature.AddDes2(des);
-//			feature.AddKp2(kp);
-//			feature.addImg2(img);
-//		}
-//	}
-//	return feature;
-//}
+Feature AKAZEe(Feature feature, string pimg, int w,int h, int type, AKAZE::DescriptorType descriptor_type = AKAZE::DESCRIPTOR_KAZE, int descriptor_size = 64, int descriptor_channels = 3,
+								float threshold = 0.0012f, int nOctaves = 5, int nOctaveLayers = 5, KAZE::DiffusivityType diffusivity = KAZE::DIFF_PM_G1) {
+	Mat img = imread(pimg), des;
+	if (img.empty()) {
+		cout << "Could not open or find the image!\n" << endl;
+	
+	}
+	else {
+		if (type == 1) {
+			resize(img, img, Size(w, h), 0.75, 0.75);
+			Ptr<AKAZE> detector = AKAZE::create(descriptor_type, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaves, diffusivity);
+			vector<KeyPoint> kp;
+			detector->detectAndCompute(img, noArray(), kp, des);
+			feature.AddDes1(des);
+			feature.AddKp1(kp);
+			feature.addImg1(img);
+		}
+		else if (type == 2) {
+			resize(img, img, Size(w, h), 0.75, 0.75);
+			Ptr<AKAZE> detector = AKAZE::create(descriptor_type, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaves, diffusivity);
+			vector<KeyPoint> kp;
+
+			detector->detectAndCompute(img, noArray(), kp, des);
+			feature.AddDes2(des);
+			feature.AddKp2(kp);
+			feature.addImg2(img);
+		}
+	}
+	return feature;
+}
 
 Feature ORBb(Feature feature, string pimg, int w, int h, int type, int descriptor_size = 64, int descriptor_channels = 3,
 	float threshold = 0.0012f, int nOctaves = 5, int nOctaveLayers = 5)
