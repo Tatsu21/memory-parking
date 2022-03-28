@@ -77,6 +77,40 @@ Feature AKAZEe(Feature feature, string pimg,string mimg, int w,int h, int type, 
 	return feature;
 }
 
+namespace FT
+{
+	Feature SIFT(Feature feature, string pimg, int w, int h, int type, int nFeatures = 0, int nOctaveLayers = 3, double contrastThreshold = 0.09, double edgeThreshold = 20.00,
+		double sigma = 0.20) {
+		Mat img = imread(pimg), des;
+		if (img.empty()) {
+			cout << "Could not open or find the image!\n" << endl;
+
+		}
+		else {
+			if (type == 1) {
+				resize(img, img, Size(w, h), 0.75, 0.75);
+				Ptr<cv::SIFT> detector = SIFT::create(nFeatures, nOctaveLayers, contrastThreshold, edgeThreshold, sigma);
+				vector<KeyPoint> kp;
+				detector->detectAndCompute(img, noArray(), kp, des);
+				feature.AddDes1(des);
+				feature.AddKp1(kp);
+				feature.addImg1(img);
+			}
+			else if (type == 2) {
+				resize(img, img, Size(w, h), 0.75, 0.75);
+				Ptr<cv::SIFT> detector = SIFT::create(nFeatures, nOctaveLayers, contrastThreshold, edgeThreshold, sigma);
+				vector<KeyPoint> kp;
+
+				detector->detectAndCompute(img, noArray(), kp, des);
+				feature.AddDes2(des);
+				feature.AddKp2(kp);
+				feature.addImg2(img);
+			}
+		}
+		return feature;
+	}
+}
+
 int main()
 {	
 
@@ -87,10 +121,12 @@ int main()
 	Feature feature;
 	string nrs;
 	Mat img_matches, des1, des2;
-	feature = AKAZEe(feature, "26.jpg", "26seg.jpg", 750, 750, 1, AKAZE::DESCRIPTOR_KAZE, 64, 3, 0.0012f, 5, 5, KAZE::DIFF_PM_G1);
-	
+	feature = AKAZEe(feature, "26.jpg", 750, 750, 1, AKAZE::DESCRIPTOR_KAZE, 64, 3, 0.0012f, 5, 5, KAZE::DIFF_PM_G1);
+	//feature = FT::SIFT(feature, path1 + imgs[i] + ".jpg", 750, 750, 2, 0, 3, 0.09, 20.00, 2.00);
+
 	for (int i = 0; i < 26; i++) {
-		feature = AKAZEe(feature, path1 + imgs[i] + ".jpg", mpath + imgs[i] + ".jpg", 750, 750, 2, AKAZE::DESCRIPTOR_KAZE, 64, 3, 0.0012f, 5, 5, KAZE::DIFF_PM_G1);
+		feature = AKAZEe(feature, "26.jpg", 750, 750, 1, AKAZE::DESCRIPTOR_KAZE, 64, 3, 0.0012f, 5, 5, KAZE::DIFF_PM_G1);
+		//feature = FT::SIFT(feature, path1 + imgs[i] + ".jpg", 750, 750, 2, 0, 3, 0.09, 20.00, 2.00);
 	}
 	//Images
 	for(int i= 0; i< (int)feature.RetunImg2().size(); i++){
@@ -119,7 +155,7 @@ int main()
 			img_matches = PercentOnImage(img_matches, percent);
 			imshow("Matches", img_matches);
 			imwrite("save_" + to_string(nr++) + ".jpg", img_matches);
-			waitKey(1000);
+			waitKey(0);
 		}
 		catch (cv::Exception& e) {
 		    cerr << e.msg << endl;
