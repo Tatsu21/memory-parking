@@ -29,6 +29,44 @@ Mat PercentOnImage(Mat img, float percent) {
 
 	return img;
 }
+Mat usm(Mat original, float radius, float amount, float threshold)
+{
+
+	cv::Mat input;
+	original.convertTo(input, CV_32FC3);
+
+
+	Mat retbuf = input.clone();
+
+	Mat blurred;
+	cv::GaussianBlur(input, blurred, cv::Size(0, 0), radius);
+
+
+	Mat unsharpMask;
+	cv::subtract(input, blurred, unsharpMask);
+
+
+	cv::blur(unsharpMask, unsharpMask, { 3,3 });
+
+	for (int row = 0; row < original.rows; row++)
+	{
+		for (int col = 0; col < original.cols; col++)
+		{
+			Vec3f origColor = input.at<Vec3f>(row, col);
+			Vec3f difference = unsharpMask.at<Vec3f>(row, col);
+
+			if (cv::norm(difference) >= threshold) {
+				retbuf.at<Vec3f>(row, col) = origColor + amount * difference;
+			}
+		}
+	}
+
+	// convert back to unsigned char
+	cv::Mat ret;
+	retbuf.convertTo(ret, CV_8UC3);
+
+	return ret;
+}
 Mat FeatureROI(string mimg, Mat img) {
 
 	Mat mask;
@@ -46,15 +84,18 @@ Mat FeatureROI(string mimg, Mat img) {
 Feature AKAZEe(Feature feature, string pimg,string mimg, int w,int h, int type, AKAZE::DescriptorType descriptor_type = AKAZE::DESCRIPTOR_KAZE, int descriptor_size = 64, int descriptor_channels = 3,
 								float threshold = 0.0012f, int nOctaves = 5, int nOctaveLayers = 5, KAZE::DiffusivityType diffusivity = KAZE::DIFF_PM_G1) {
 	Mat img = imread(pimg), des;
-
 	if (img.empty()) {
 		cout << "Could not open or find the image!\n" << endl;
 	
 	}
 	else {
 		if (type == 1) {
+			img = usm(img, 2.8, 4., 1.);
 			resize(img, img, Size(750, 750), 0.75, 0.75);
+			
 			Mat mask = FeatureROI(mimg, img);
+			cvtColor(mask, mask, COLOR_BGR2GRAY);
+			
 			Ptr<AKAZE> detector = AKAZE::create(descriptor_type, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaves, diffusivity);
 			vector<KeyPoint> kp;
 			detector->detectAndCompute(mask, noArray(), kp, des);
@@ -63,8 +104,12 @@ Feature AKAZEe(Feature feature, string pimg,string mimg, int w,int h, int type, 
 			feature.addImg1(mask);
 		}
 		else if (type == 2) {
+			img = usm(img, 0.8, 12., 1.);
 			resize(img, img, Size(750, 750), 0.75, 0.75);
 			Mat mask = FeatureROI(mimg, img);
+			cvtColor(mask, mask, COLOR_BGR2GRAY);
+			
+
 			Ptr<AKAZE> detector = AKAZE::create(descriptor_type, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaves, diffusivity);
 			vector<KeyPoint> kp;
 
@@ -102,7 +147,7 @@ int main()
 			feature.RetunDes2()[i].convertTo(des2, CV_32F);
 	    	matcher->knnMatch(des1, des2, matches,2);
 					//-- Filter matches using the Lowe's ratio test
-			const float ratio_thresh = 0.8f;
+			const float ratio_thresh = 0.79f;
 			if (matches.size()) {
 				for (size_t i = 0; i < matches.size(); i++)
 				{
