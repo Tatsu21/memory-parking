@@ -187,7 +187,39 @@ namespace FT
 	}
 }
 
+Feature ORBb(Feature feature, string pimg, int w, int h, int type, int descriptor_size = 64, int descriptor_channels = 3,
+	float threshold = 0.0012f, int nOctaves = 5, int nOctaveLayers = 5)
+{
+	Mat img = imread(pimg), des;
+	if (img.empty()) {
+		cout << "Could not open or find the image!\n" << endl;
 
+	}
+	else {
+		if (type == 1) {
+			resize(img, img, Size(w, h), 0.8, 0.8);
+			Ptr<ORB>orbPtr = ORB::create(300, 1.1, 16, 31, 0, 2, cv::ORB::HARRIS_SCORE, 31, 70);
+			vector<KeyPoint> kp;
+			orbPtr->detect(img, kp, des);
+			orbPtr->compute(img, kp, des);
+			feature.AddDes1(des);
+			feature.AddKp1(kp);
+			feature.addImg1(img);
+
+		}
+		else if (type == 2) {
+			resize(img, img, Size(w, h), 0.8, 0.8);
+			Ptr<ORB>orbPtr = ORB::create(300, 1.1, 16, 31, 0, 2, cv::ORB::HARRIS_SCORE, 31, 70);
+			vector<KeyPoint> kp;
+			orbPtr->detect(img, kp, des);
+			orbPtr->compute(img, kp, des);
+			feature.AddDes2(des);
+			feature.AddKp2(kp);
+			feature.addImg2(img);
+		}
+	}
+	return feature;
+}
 int main()
 {	
 
@@ -202,8 +234,10 @@ int main()
 	feature = AKAZEe(feature, "26.jpg", 750, 750, 1, AKAZE::DESCRIPTOR_KAZE, 64, 3, 0.0012f, 5, 5, KAZE::DIFF_PM_G1);
 	//feature = FT::SIFT(feature, path1 + imgs[i] + ".jpg", 750, 750, 2, 0, 3, 0.09, 20.00, 2.00);
 	//feature = KAZEe(feature, "26.jpg", 750, 750, 1);
+	//feature = ORBb(feature, "10.jpg", 750, 750, 1);
 
 	for (int i = 0; i < 26; i++) {
+		//feature = ORBb(feature, path1 + imgs[i] + ".jpg", 750, 750, 2);
 		//feature = KAZEe(feature, path1 + imgs[i] + ".jpg", 750, 750, 2);
     //feature = FT::SIFT(feature, path1 + imgs[i] + ".jpg", 750, 750, 2, 0, 3, 0.09, 20.00, 2.00);
 		feature = AKAZEe(feature, path1 + imgs[i] + ".jpg", mpath + imgs[i] + ".jpg", 750, 750, 2, AKAZE::DESCRIPTOR_KAZE, 64, 3, 0.0012f, 5, 5, KAZE::DIFF_PM_G1);
