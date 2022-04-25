@@ -264,7 +264,6 @@ int main()
 					Scalar::all(-1), std::vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 				img_matches = PercentOnImage(img_matches, percent);
 				verifi.push_back(percent);
-				imwrite("result/save_" + to_string(nr++) + ".jpg", img_matches);
 
 			}
 			catch (cv::Exception& e) {
@@ -314,7 +313,7 @@ int main()
 				drawMatches(feature.RetunImg1()[nr], feature.ReturnKp1()[nr], feature.RetunImg2()[goods[i]], feature.ReturnKp2()[goods[i]], good_matches, gooooods, Scalar::all(-1),
 					Scalar::all(-1), std::vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 				gooooods = PercentOnImage(gooooods, percent);
-				imwrite("result/good/save_" + to_string(nr) + ".jpg", gooooods);
+				imwrite("result/save_" + to_string(nr) + ".jpg", gooooods);
 				nr++;
 			}
 		}
