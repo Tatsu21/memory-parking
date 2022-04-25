@@ -33,7 +33,7 @@ string* ReadFile2(string dir) {
 }
 Mat PercentOnImage(Mat img, float percent) {
 
-	putText(img, "Percent : " + to_string(percent) + "%", Point(5, img.rows - 12), FONT_ITALIC, 0.8, CV_RGB(255, 0, 0), 2);
+	putText(img, "Percent : "+to_string(percent)+"%", Point(5, img.rows-12), FONT_ITALIC, 0.8, CV_RGB(255, 0, 0), 2);
 
 	return img;
 }
@@ -79,7 +79,7 @@ Mat FeatureROI(string mimg, Mat img) {
 
 	Mat mask;
 	Mat imgm = imread(mimg);
-
+	
 	if (imgm.empty()) {
 		cout << "Could not open or find the image!\n" << endl;
 
@@ -91,25 +91,25 @@ Mat FeatureROI(string mimg, Mat img) {
 	}
 	return mask;
 }
-Feature AKAZEe(Feature feature, string pimg, string mimg, int w, int h, int type, AKAZE::DescriptorType descriptor_type = AKAZE::DESCRIPTOR_KAZE, int descriptor_size = 64, int descriptor_channels = 3,
-	float threshold = 0.0012f, int nOctaves = 5, int nOctaveLayers = 5, KAZE::DiffusivityType diffusivity = KAZE::DIFF_PM_G1) {
+Feature AKAZEe(Feature feature, string pimg,string mimg, int w,int h, int type, AKAZE::DescriptorType descriptor_type = AKAZE::DESCRIPTOR_KAZE, int descriptor_size = 64, int descriptor_channels = 3,
+								float threshold = 0.0012f, int nOctaves = 5, int nOctaveLayers = 5, KAZE::DiffusivityType diffusivity = KAZE::DIFF_PM_G1) {
 	Mat img = imread(pimg), des;
 	if (img.empty()) {
 		cout << "Could not open or find the image!\n" << endl;
-
+	
 	}
 	else {
 		if (type == 1) {
 			img = usm(img, 2.8, 4., 1.);
 			resize(img, img, Size(750, 750), 0.75, 0.75);
-
+			
 			Mat mask = FeatureROI(mimg, img);
 			if (mask.empty()) {
 				mask = img;
 			}
 			cvtColor(mask, mask, COLOR_BGR2GRAY);
-
-
+			
+			
 			Ptr<AKAZE> detector = AKAZE::create(descriptor_type, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaves, diffusivity);
 			vector<KeyPoint> kp;
 			detector->detectAndCompute(mask, noArray(), kp, des);
@@ -125,7 +125,7 @@ Feature AKAZEe(Feature feature, string pimg, string mimg, int w, int h, int type
 				mask = img;
 			}
 			cvtColor(mask, mask, COLOR_BGR2GRAY);
-
+			
 			cout << pimg;
 			Ptr<AKAZE> detector = AKAZE::create(descriptor_type, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaves, diffusivity);
 			vector<KeyPoint> kp;
@@ -139,7 +139,7 @@ Feature AKAZEe(Feature feature, string pimg, string mimg, int w, int h, int type
 	return feature;
 }
 
-Feature KAZEe(Feature feature, string pimg, int w, int h, int type, bool extended = false, bool upright = false, float threshold = 0.001f, int nOctaves = 4, int nOctaveLayers = 4, KAZE::DiffusivityType diffusivity = KAZE::DIFF_PM_G2) {
+Feature KAZEe(Feature feature, string pimg, int w, int h, int type, bool extended = false, bool upright = false, float threshold = 0.001f, int nOctaves = 4, int nOctaveLayers = 4, KAZE::DiffusivityType diffusivity = KAZE::DIFF_PM_G2){
 	Mat img = imread(pimg), des;
 
 	if (img.empty()) {
@@ -242,7 +242,7 @@ Feature ORBb(Feature feature, string pimg, int w, int h, int type, int descripto
 	return feature;
 }
 int main()
-{
+{	
 
 	const String path1 = "img/";
 	const String spath = "save/";
@@ -258,7 +258,7 @@ int main()
 	vector<int> goods;
 	//train images
 	for (int i = 0; i < 10; i++) {
-		feature = AKAZEe(feature, spath + train[i] + ".jpg", mspath + train[i] + ".jpg", 750, 750, 1, AKAZE::DESCRIPTOR_KAZE, 64, 3, 0.0012f, 5, 5, KAZE::DIFF_PM_G1);
+		feature = AKAZEe(feature, spath+train[i]+".jpg",mspath+train[i]+".jpg", 750, 750, 1, AKAZE::DESCRIPTOR_KAZE, 64, 3, 0.0012f, 5, 5, KAZE::DIFF_PM_G1);
 		//feature = FT::SIFT(feature, path1 + imgs[i] + ".jpg", 750, 750, 2, 0, 3, 0.09, 20.00, 2.00);
 		//feature = KAZEe(feature, "26.jpg", 750, 750, 1);
 	}
@@ -297,7 +297,8 @@ int main()
 					Scalar::all(-1), std::vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 				img_matches = PercentOnImage(img_matches, percent);
 				verifi.push_back(percent);
-
+				imwrite("result/save_" + to_string(nr++) + ".jpg", img_matches);
+				
 			}
 			catch (cv::Exception& e) {
 				cerr << e.msg << endl;
@@ -311,8 +312,8 @@ int main()
 			//}
 		}
 		float max = verifi[0];
-		int nr = 0;
-		int ret = 0;
+		int nr=0;
+		int ret=0;
 		for (int i = 0; i < verifi.size(); i++) {
 			if (verifi[i] > max) max = verifi[i], ret = nr;
 			nr++;
@@ -346,8 +347,8 @@ int main()
 				drawMatches(feature.RetunImg1()[nr], feature.ReturnKp1()[nr], feature.RetunImg2()[goods[i]], feature.ReturnKp2()[goods[i]], good_matches, gooooods, Scalar::all(-1),
 					Scalar::all(-1), std::vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 				gooooods = PercentOnImage(gooooods, percent);
-				imwrite("result/save_" + to_string(nr) + ".jpg", gooooods);
-				nr++;
+				imwrite("result/good/save_" + to_string(nr) + ".jpg", gooooods);
+				 nr++;
 			}
 		}
 	}
