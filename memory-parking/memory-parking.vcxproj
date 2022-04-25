@@ -156,9 +156,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="calib_intrinsic.cpp" />
+    <ClCompile Include="calib_stereo.cpp" />
+    <ClCompile Include="GUIproiect\mainwindow.cpp" />
+    <ClCompile Include="read_images.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="undistort_rectify.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="popt_pp.h" />
     <ClInclude Include="Utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

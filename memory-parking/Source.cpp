@@ -5,7 +5,16 @@
 #include <fstream>
 #include <list>
 #include "Utils.cpp"
-
+#include <opencv2/core/core.hpp>
+#include <opencv2/calib3d/calib3d.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <stdio.h>
+#include "popt_pp.h"
+#include <sys/stat.h>
+#include "GUIproiect/mainwindow.cpp"
+#include "GUIproiect/mainwindow.h"
+using namespace MainWindow;
 
 #define SIZE_OF_PHOTO 200;
 using namespace cv;
@@ -13,7 +22,6 @@ using namespace cv::xfeatures2d;
 namespace fs = std::filesystem;
 using namespace std;
 string get_stem(const fs::path& p) { return (p.stem().string()); }
-
 
 string* ReadFile(string dir) {
 	static string photos[1200];
@@ -220,16 +228,24 @@ Feature ORBb(Feature feature, string pimg, int w, int h, int type, int descripto
 	}
 	return feature;
 }
-int main()
+int main(int argc, char const** argv)
 {	
-
+	int board_width, board_height, num_imgs;
+	float square_size;
+	char* imgs_directory;
+	char* imgs_filename;
+	char* out_file;
+	char* extension;
 	const String path1 = "img/";
 	const String mpath = "blk/";
+	String tests = MainWindow::on_listView_doubleClicked();
 	string* imgs = ReadFile(path1);
 	int nr = 0;
 	Feature feature;
 	string nrs;
 	Mat img_matches, des1, des2;
+	
+	
 
 	feature = AKAZEe(feature, "26.jpg", 750, 750, 1, AKAZE::DESCRIPTOR_KAZE, 64, 3, 0.0012f, 5, 5, KAZE::DIFF_PM_G1);
 	//feature = FT::SIFT(feature, path1 + imgs[i] + ".jpg", 750, 750, 2, 0, 3, 0.09, 20.00, 2.00);
