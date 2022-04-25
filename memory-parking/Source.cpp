@@ -315,7 +315,7 @@ int main()
 					Scalar::all(-1), std::vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 				gooooods = PercentOnImage(gooooods, percent);
 				imwrite("result/good/save_" + to_string(nr) + ".jpg", gooooods);
-				nr++;
+				 nr++;
 			}
 		}
 	}
