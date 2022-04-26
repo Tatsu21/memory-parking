@@ -275,7 +275,7 @@ int main()
 	for (int j = 0; j < (int)feature.RetunImg1().size(); j++) {
 		for (int i = 0; i < (int)feature.RetunImg2().size(); i++) {
 			try {
-				Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::BRUTEFORCE);
+				Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::FLANNBASED);
 				vector<vector <DMatch>> matches;
 				vector <DMatch>good_matches;
 				feature.RetunDes1()[j].convertTo(des1, CV_32F);
