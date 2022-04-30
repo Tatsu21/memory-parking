@@ -252,6 +252,7 @@ int main(int argc, char* argv[])
 	QQmlApplicationEngine engine;
 	engine.load(QUrl(QStringLiteral("qrc:/Source.qml")));
 
+
 	const String path1 = "img/";
 	const String spath = "save/";
 	const String mspath = "blk-save/";
