@@ -14,7 +14,6 @@ namespace fs = std::filesystem;
 using namespace std;
 string get_stem(const fs::path& p) { return (p.stem().string()); }
 
-
 string* ReadFile(string dir) {
 	static string photos[1200];
 	int nr = 0;
