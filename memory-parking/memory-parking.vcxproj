@@ -109,11 +109,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="D:\memory-parking\memory-parking\Source.cpp" />
-    <ClCompile Include="D:\memory-parking\memory-parking\Utils.cpp" />
     <QtRcc Include="qml.qrc" />
     <None Include="C:\Users\radu4\source\repos\memory-parking\memory-parking\main.qml" />
     <None Include="Source.qml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
