@@ -110,7 +110,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <QtRcc Include="qml.qrc" />
-    <None Include="C:\Users\radu4\source\repos\memory-parking\memory-parking\main.qml" />
     <None Include="Source.qml" />
   </ItemGroup>
   <ItemGroup>
