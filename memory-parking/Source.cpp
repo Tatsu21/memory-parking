@@ -246,19 +246,19 @@ int main(int argc, char* argv[])
 #if defined(Q_OS_WIN)
 	QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
-
+	
 	QGuiApplication app(argc, argv);
 
 	QQmlApplicationEngine engine;
 	engine.load(QUrl(QStringLiteral("qrc:/Source.qml")));
-
-
+	
 	const String path1 = "img/";
 	const String spath = "save/";
 	const String mspath = "blk-save/";
 	const String mpath = "blk/";
 	string* imgs = ReadFile(path1);
 	string* train = ReadFile2(spath);
+	
 	int nr = 0;
 	Feature feature;
 	string nrs;
@@ -274,7 +274,6 @@ int main(int argc, char* argv[])
 
 	for (int i = 0; i < 26; i++) {
 		//feature = ORBb(feature, path1 + imgs[i] + ".jpg", 750, 750, 2);
-
 		//feature = KAZEe(feature, path1 + imgs[i] + ".jpg", 750, 750, 2);
 		//feature = FT::SIFT(feature, path1 + imgs[i] + ".jpg", 750, 750, 2, 0, 3, 0.09, 20.00, 2.00);
 		feature = AKAZEe(feature, path1 + imgs[i] + ".jpg", mpath + imgs[i] + ".jpg", 750, 750, 2, AKAZE::DESCRIPTOR_KAZE, 64, 3, 0.0012f, 5, 5, KAZE::DIFF_PM_G1);
