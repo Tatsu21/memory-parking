@@ -36,16 +36,16 @@ public:
 	void AddKp2(vector<KeyPoint> kps2) {
 		kp2.push_back(kps2);
 	}
-	vector<Mat> RetunDes1() {
+	vector<Mat> ReturnDes1() {
 		return des1;
 	}
-	vector<Mat> RetunDes2() {
+	vector<Mat> ReturnDes2() {
 		return des2;
 	}
-	vector<Mat> RetunImg1() {
+	vector<Mat> ReturnImg1() {
 		return img1;
 	}
-	vector<Mat> RetunImg2() {
+	vector<Mat> ReturnImg2() {
 		return img2;
 	}
 	vector<vector<KeyPoint>> ReturnKp1() {
