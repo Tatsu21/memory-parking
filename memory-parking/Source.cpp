@@ -5,8 +5,8 @@
 #include <fstream>
 #include <list>
 #include "Utils.cpp"
-//#include <QGuiApplication>
-//#include <QQmlApplicationEngine>
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
 
 #define SIZE_OF_PHOTO 200;
 using namespace cv;
@@ -101,7 +101,7 @@ Feature AKAZEe(Feature feature, string pimg, string mimg, int w, int h, int type
 			cvtColor(mask, mask, COLOR_BGR2GRAY);
 
 
-			Ptr<AKAZE> detector = AKAZE::create(descriptor_type, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaves, diffusivity);
+			Ptr<AKAZE> detector = AKAZE::create(descriptor_type, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaves, KAZE::DIFF_PM_G1);
 			vector<KeyPoint> kp;
 			detector->detectAndCompute(mask, noArray(), kp, des);
 			feature.AddDes1(des);
@@ -118,7 +118,7 @@ Feature AKAZEe(Feature feature, string pimg, string mimg, int w, int h, int type
 			cvtColor(mask, mask, COLOR_BGR2GRAY);
 
 			cout << pimg;
-			Ptr<AKAZE> detector = AKAZE::create(descriptor_type, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaves, diffusivity);
+			Ptr<AKAZE> detector = AKAZE::create(descriptor_type, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaves, KAZE::DIFF_PM_G1);
 			vector<KeyPoint> kp;
 
 			detector->detectAndCompute(mask, noArray(), kp, des);
@@ -280,20 +280,21 @@ auto BF(int photos, int step, Feature feature, float thresh, int matchingtyp) {
 	}
 	catch (cv::Exception& e) {
 		cerr << e.msg << endl;
+
 	}
 	return BFval{ photo_matches, percent };
 }
 
 int main(int argc, char* argv[])
 {
-//#if defined(Q_OS_WIN)
-//	QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-//#endif
+#if defined(Q_OS_WIN)
+	QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
 
-	//QGuiApplication app(argc, argv);
+	QGuiApplication app(argc, argv);
 
-	//QQmlApplicationEngine engine;
-	//engine.load(QUrl(QStringLiteral("qrc:/Source.qml")));
+	QQmlApplicationEngine engine;
+	engine.load(QUrl(QStringLiteral("qrc:/Source.qml")));
 
 
 	const String path1 = "img/";
@@ -342,18 +343,18 @@ int main(int argc, char* argv[])
 		goods.push_back(ret);
 		if (j == (int)feature.ReturnImg1().size() - 1) {
 			nr = 0;
-			Mat gooooods;
+
 			for (int i = 0; i < goods.size(); i++) {
 				auto [photo_matches, percent] = BF(nr, goods[i], feature, 0.75f, 1);
 				
-				imwrite("result/good/save_" + to_string(nr) + ".jpg", gooooods);
+				imwrite("result/good/save_" + to_string(nr) + ".jpg", photo_matches);
 				nr++;
 			}
 		}
 	}
 	//-- Draw matches
-	//if (engine.rootObjects().isEmpty())
-	//	return -1;
+	if (engine.rootObjects().isEmpty())
+		return -1;
 
 	return 0;
 }
