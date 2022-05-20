@@ -7,6 +7,26 @@
 #include "Utils.cpp"
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QObject>
+#include <QQmlContext>
+//#include "Header.h"
+#include <QtQuick>
+#include <QtGui/qguiapplication.h>
+
+
+//class interfatare : public QObject
+//{
+//	Q_OBJECT
+//public:
+//	explicit interfatare(QObject* parent = 0) : QObject(parent) {}
+//	Q_INVOKABLE static void executare() {
+//		int procesare();
+//	}
+//signals:
+//public slots:
+//};
+
+
 
 #define SIZE_OF_PHOTO 200;
 using namespace cv;
@@ -15,10 +35,19 @@ namespace fs = std::filesystem;
 using namespace std;
 string get_stem(const fs::path& p) { return (p.stem().string()); }
 
-vector<string> ReadFile(string dir) {
-	 vector<string> photos;
+string* ReadFile(string dir) {
+	static string photos[1200];
+	int nr = 0;
 	for (auto& entry : fs::directory_iterator(dir)) {
-		photos.push_back(get_stem(entry.path()));
+		photos[nr++] = get_stem(entry.path());
+	}
+	return photos;
+}
+string* ReadFile2(string dir) {
+	static string photos[1200];
+	int nr = 0;
+	for (auto& entry : fs::directory_iterator(dir)) {
+		photos[nr++] = get_stem(entry.path());
 	}
 	return photos;
 }
@@ -101,7 +130,7 @@ Feature AKAZEe(Feature feature, string pimg, string mimg, int w, int h, int type
 			cvtColor(mask, mask, COLOR_BGR2GRAY);
 
 
-			Ptr<AKAZE> detector = AKAZE::create(descriptor_type, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaves, KAZE::DIFF_PM_G1);
+			Ptr<AKAZE> detector = AKAZE::create(descriptor_type, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaves, diffusivity);
 			vector<KeyPoint> kp;
 			detector->detectAndCompute(mask, noArray(), kp, des);
 			feature.AddDes1(des);
@@ -118,7 +147,7 @@ Feature AKAZEe(Feature feature, string pimg, string mimg, int w, int h, int type
 			cvtColor(mask, mask, COLOR_BGR2GRAY);
 
 			cout << pimg;
-			Ptr<AKAZE> detector = AKAZE::create(descriptor_type, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaves, KAZE::DIFF_PM_G1);
+			Ptr<AKAZE> detector = AKAZE::create(descriptor_type, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaves, diffusivity);
 			vector<KeyPoint> kp;
 
 			detector->detectAndCompute(mask, noArray(), kp, des);
@@ -232,77 +261,16 @@ Feature ORBb(Feature feature, string pimg, int w, int h, int type, int descripto
 	}
 	return feature;
 }
-auto BF(int photos, int step, Feature feature, float thresh, int matchingtyp) {
-	struct BFval {
-		Mat photo;
-		float percent;
-	};
-	Mat des1, des2, photo1, photo2;
-	Mat photo_matches;
-	Ptr<DescriptorMatcher> matcher;
-	switch (matchingtyp)
-	{
-	case 1: {
-		matcher = DescriptorMatcher::create(DescriptorMatcher::BRUTEFORCE);
-		break;
-	}
-	case 2: {
-		matcher = DescriptorMatcher::create(DescriptorMatcher::FLANNBASED);
-		break;
-	}
-	}
-	vector<vector <DMatch>> matches;
-	vector <DMatch>good_matches;
-	vector<KeyPoint> kp1, kp2;
-	float percent = 0.0f;
-	try {
-		photo1 = feature.ReturnImg1()[photos];
-		photo2 = feature.ReturnImg2()[step];
-		kp1 = feature.ReturnKp1()[photos];
-		kp2 = feature.ReturnKp2()[step];
-
-		feature.ReturnDes1()[photos].convertTo(des1, CV_32F);
-		feature.ReturnDes2()[step].convertTo(des2,CV_32F);
-
-		matcher->knnMatch(des1, des2, matches, 2);
-		//-- filter matches using the lowe's ratio test
-		if (matches.size()) {
-			for (size_t i = 0; i < matches.size(); i++) {
-				if (matches[i][0].distance < thresh * matches[i][1].distance) {
-					good_matches.push_back(matches[i][0]);
-				}
-			}
-		}
-		percent = (((float)good_matches.size() / (float)des1.cols) * (float)100);
-
-		drawMatches(photo1, kp1, photo2, kp2, good_matches, photo_matches, Scalar::all(-1), Scalar::all(-1), std::vector<char>(),DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-		photo_matches = PercentOnImage(photo_matches, percent);
-	}
-	catch (cv::Exception& e) {
-		cerr << e.msg << endl;
-
-	}
-	return BFval{ photo_matches, percent };
-}
-
-int main(int argc, char* argv[])
+int procesare()
 {
-#if defined(Q_OS_WIN)
-	QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-#endif
-
-	QGuiApplication app(argc, argv);
-
-	QQmlApplicationEngine engine;
-	engine.load(QUrl(QStringLiteral("qrc:/Source.qml")));
-
-
+	cout << "started processing";
 	const String path1 = "img/";
 	const String spath = "save/";
 	const String mspath = "blk-save/";
 	const String mpath = "blk/";
-	vector<string> imgs = ReadFile(path1);
-	vector<string> train = ReadFile(spath);
+	string* imgs = ReadFile(path1);
+	string* train = ReadFile2(spath);
+
 	int nr = 0;
 	Feature feature;
 	string nrs;
@@ -318,19 +286,50 @@ int main(int argc, char* argv[])
 
 	for (int i = 0; i < 26; i++) {
 		//feature = ORBb(feature, path1 + imgs[i] + ".jpg", 750, 750, 2);
-
 		//feature = KAZEe(feature, path1 + imgs[i] + ".jpg", 750, 750, 2);
 		//feature = FT::SIFT(feature, path1 + imgs[i] + ".jpg", 750, 750, 2, 0, 3, 0.09, 20.00, 2.00);
 		feature = AKAZEe(feature, path1 + imgs[i] + ".jpg", mpath + imgs[i] + ".jpg", 750, 750, 2, AKAZE::DESCRIPTOR_KAZE, 64, 3, 0.0012f, 5, 5, KAZE::DIFF_PM_G1);
 	}
 
 	//Images
-	for (int j = 0; j < (int)feature.ReturnImg1().size(); j++) {
-		for (int i = 0; i < (int)feature.ReturnImg2().size(); i++) {
-			auto [photo_matches, percent] = BF(j, i, feature, 0.75f, 1);
+	for (int j = 0; j < (int)feature.RetunImg1().size(); j++) {
+		for (int i = 0; i < (int)feature.RetunImg2().size(); i++) {
+			try {
+				Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::BRUTEFORCE);
+				vector<vector <DMatch>> matches;
+				vector <DMatch>good_matches;
+				feature.RetunDes1()[j].convertTo(des1, CV_32F);
+				feature.RetunDes2()[i].convertTo(des2, CV_32F);
+				matcher->knnMatch(des1, des2, matches, 2);
+				//-- Filter matches using the Lowe's ratio test
+				const float ratio_thresh = 0.77f;
+				if (matches.size()) {
+					for (size_t i = 0; i < matches.size(); i++)
+					{
+						if (matches[i][0].distance < ratio_thresh * matches[i][1].distance)
+						{
+							good_matches.push_back(matches[i][0]);
+						}
+					}
+				}
+				float percent = (((float)good_matches.size() / (float)feature.RetunDes1()[j].cols) * (float)100);
+				drawMatches(feature.RetunImg1()[j], feature.ReturnKp1()[j], feature.RetunImg2()[i], feature.ReturnKp2()[i], good_matches, img_matches, Scalar::all(-1),
+					Scalar::all(-1), std::vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+				img_matches = PercentOnImage(img_matches, percent);
 				verifi.push_back(percent);
-				imwrite("result/save_" + to_string(nr++) + ".jpg", photo_matches);
+				imwrite("result/save_" + to_string(nr++) + ".jpg", img_matches);
 
+			}
+			catch (cv::Exception& e) {
+				cerr << e.msg << endl;
+			}
+			//	
+			//			//-- Show detected matches
+
+
+			//		nr++;
+			//	}
+			//}
 		}
 		float max = verifi[0];
 		int nr = 0;
@@ -341,20 +340,58 @@ int main(int argc, char* argv[])
 		}
 		verifi.clear();
 		goods.push_back(ret);
-		if (j == (int)feature.ReturnImg1().size() - 1) {
+		if (j == (int)feature.RetunImg1().size() - 1) {
 			nr = 0;
-
+			Mat gooooods;
 			for (int i = 0; i < goods.size(); i++) {
-				auto [photo_matches, percent] = BF(nr, goods[i], feature, 0.75f, 1);
-				
-				imwrite("result/good/save_" + to_string(nr) + ".jpg", photo_matches);
+				Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::BRUTEFORCE);
+				vector<vector <DMatch>> matches;
+				vector <DMatch>good_matches;
+				feature.RetunDes1()[nr].convertTo(des1, CV_32F);
+				cout << goods[i];
+				feature.RetunDes2()[goods[i]].convertTo(des2, CV_32F);
+				matcher->knnMatch(des1, des2, matches, 2);
+				//-- Filter matches using the Lowe's ratio test
+				const float ratio_thresh = 0.74f;
+				if (matches.size()) {
+					for (size_t i = 0; i < matches.size(); i++)
+					{
+						if (matches[i][0].distance < ratio_thresh * matches[i][1].distance)
+						{
+							good_matches.push_back(matches[i][0]);
+						}
+					}
+				}
+				float percent = (((float)good_matches.size() / (float)feature.RetunDes1()[nr].cols) * (float)100);
+				if (percent > 100.00f) percent = 100.00f;
+				drawMatches(feature.RetunImg1()[nr], feature.ReturnKp1()[nr], feature.RetunImg2()[goods[i]], feature.ReturnKp2()[goods[i]], good_matches, gooooods, Scalar::all(-1),
+					Scalar::all(-1), std::vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+				gooooods = PercentOnImage(gooooods, percent);
+				imwrite("result/good/save_" + to_string(nr) + ".jpg", gooooods);
 				nr++;
 			}
 		}
 	}
 	//-- Draw matches
+	return 0;
+}
+
+
+int main(int argc, char* argv[])
+{
+#if defined(Q_OS_WIN)
+	QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
+	//qmlRegisterType<Interfatare>("Interfatare", 1, 0, "Interfatare");
+	QGuiApplication app(argc, argv);
+	//QScopedPointer <Interfatare> intr(new Interfatare);
+	QQmlApplicationEngine engine;
+	engine.load(QUrl(QStringLiteral("qrc:/Source.qml")));
+	//QQmlContext* context = engine.rootContext();
+	//context->setContextProperty(QStringLiteral("interfatare"), new Interfatare(&engine));
+	//engine.rootContext()->setContextProperty("intr", intr.data());
 	if (engine.rootObjects().isEmpty())
 		return -1;
 
-	return 0;
+	return app.exec();
 }
