@@ -1,4 +1,5 @@
-﻿#include <filesystem>
+#include "pch.h"
+#include <filesystem>
 #include <iostream>
 #include <string>
 #include <cstring>
@@ -6,11 +7,12 @@
 #include <list>
 #include "Utils.cpp"
 
-#define SIZE_OF_PHOTO 200;
-using namespace cv;
-using namespace cv::xfeatures2d;
+#include "Form1.h"
+
+using namespace System::Windows::Forms;
+using namespace System;
 namespace fs = std::filesystem;
-using namespace std;
+
 string get_stem(const fs::path& p) { return (p.stem().string()); }
 
 vector<string> ReadFile(string dir) {
@@ -282,14 +284,21 @@ auto BF(int photos, int step, Feature feature, float thresh, int matchingtyp) {
 	}
 	return BFval{ photo_matches, percent };
 }
+//int main(array<System::String ^> ^args)
+//{
+//    return 0;
+//}
 
-int main(int argc, char* argv[])
-{
 
-	const String path1 = "img/";
-	const String spath = "save/";
-	const String mspath = "blk-save/";
-	const String mpath = "blk/";
+[STAThread]
+int main() {
+	Application::EnableVisualStyles();
+	Application::SetCompatibleTextRenderingDefault(false);
+	Application::Run(gcnew CppCLRWinformsProjekt::Form1()); 
+	const string path1 = "img/";
+	const string spath = "save/";
+	const string mspath = "blk-save/";
+	const string mpath = "blk/";
 	vector<string> imgs = ReadFile(path1);
 	vector<string> train = ReadFile(spath);
 	int nr = 0;
@@ -341,6 +350,5 @@ int main(int argc, char* argv[])
 			}
 		}
 	}
-
 	return 0;
 }
