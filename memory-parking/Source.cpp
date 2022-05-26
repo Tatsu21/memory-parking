@@ -1,3 +1,4 @@
+#include "pch.h"
 #include <filesystem>
 #include <iostream>
 #include <string>
@@ -5,18 +6,17 @@
 #include <fstream>
 #include <list>
 #include "Utils.cpp"
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
 
-#define SIZE_OF_PHOTO 200;
-using namespace cv;
-using namespace cv::xfeatures2d;
+#include "Form1.h"
+
+using namespace System::Windows::Forms;
+using namespace System;
 namespace fs = std::filesystem;
-using namespace std;
+
 string get_stem(const fs::path& p) { return (p.stem().string()); }
 
 vector<string> ReadFile(string dir) {
-	 vector<string> photos;
+	vector<string> photos;
 	for (auto& entry : fs::directory_iterator(dir)) {
 		photos.push_back(get_stem(entry.path()));
 	}
@@ -262,7 +262,7 @@ auto BF(int photos, int step, Feature feature, float thresh, int matchingtyp) {
 		kp2 = feature.ReturnKp2()[step];
 
 		feature.ReturnDes1()[photos].convertTo(des1, CV_32F);
-		feature.ReturnDes2()[step].convertTo(des2,CV_32F);
+		feature.ReturnDes2()[step].convertTo(des2, CV_32F);
 
 		matcher->knnMatch(des1, des2, matches, 2);
 		//-- filter matches using the lowe's ratio test
@@ -275,7 +275,7 @@ auto BF(int photos, int step, Feature feature, float thresh, int matchingtyp) {
 		}
 		percent = (((float)good_matches.size() / (float)des1.cols) * (float)100);
 
-		drawMatches(photo1, kp1, photo2, kp2, good_matches, photo_matches, Scalar::all(-1), Scalar::all(-1), std::vector<char>(),DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+		drawMatches(photo1, kp1, photo2, kp2, good_matches, photo_matches, Scalar::all(-1), Scalar::all(-1), std::vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 		photo_matches = PercentOnImage(photo_matches, percent);
 	}
 	catch (cv::Exception& e) {
@@ -284,23 +284,21 @@ auto BF(int photos, int step, Feature feature, float thresh, int matchingtyp) {
 	}
 	return BFval{ photo_matches, percent };
 }
-
-int main(int argc, char* argv[])
-{
-#if defined(Q_OS_WIN)
-	QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-#endif
-
-	QGuiApplication app(argc, argv);
-
-	QQmlApplicationEngine engine;
-	engine.load(QUrl(QStringLiteral("qrc:/Source.qml")));
+//int main(array<System::String ^> ^args)
+//{
+//    return 0;
+//}
 
 
-	const String path1 = "img/";
-	const String spath = "save/";
-	const String mspath = "blk-save/";
-	const String mpath = "blk/";
+[STAThread]
+int main() {
+	Application::EnableVisualStyles();
+	Application::SetCompatibleTextRenderingDefault(false);
+	Application::Run(gcnew CppCLRWinformsProjekt::Form1()); 
+	const string path1 = "img/";
+	const string spath = "save/";
+	const string mspath = "blk-save/";
+	const string mpath = "blk/";
 	vector<string> imgs = ReadFile(path1);
 	vector<string> train = ReadFile(spath);
 	int nr = 0;
@@ -328,8 +326,8 @@ int main(int argc, char* argv[])
 	for (int j = 0; j < (int)feature.ReturnImg1().size(); j++) {
 		for (int i = 0; i < (int)feature.ReturnImg2().size(); i++) {
 			auto [photo_matches, percent] = BF(j, i, feature, 0.75f, 1);
-				verifi.push_back(percent);
-				imwrite("result/save_" + to_string(nr++) + ".jpg", photo_matches);
+			verifi.push_back(percent);
+			imwrite("result/save_" + to_string(nr++) + ".jpg", photo_matches);
 
 		}
 		float max = verifi[0];
@@ -346,15 +344,11 @@ int main(int argc, char* argv[])
 
 			for (int i = 0; i < goods.size(); i++) {
 				auto [photo_matches, percent] = BF(nr, goods[i], feature, 0.75f, 1);
-				
+
 				imwrite("result/good/save_" + to_string(nr) + ".jpg", photo_matches);
 				nr++;
 			}
 		}
 	}
-	//-- Draw matches
-	if (engine.rootObjects().isEmpty())
-		return -1;
-
 	return 0;
 }
