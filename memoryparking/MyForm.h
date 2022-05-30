@@ -8,6 +8,7 @@ namespace memoryparking {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::IO;
 	using namespace System::Diagnostics;
 
 	/// <summary>
@@ -54,7 +55,7 @@ namespace memoryparking {
 	private: System::Windows::Forms::FolderBrowserDialog^ folderBrowserDialog2;
 	private: System::Windows::Forms::Button^ button2;
 	private: System::Windows::Forms::PictureBox^ pictureBox1;
-	private: System::Windows::Forms::ListView^ listView1;
+
 	private: System::DirectoryServices::DirectoryEntry^ directoryEntry1;
 	private: System::Windows::Forms::PictureBox^ pictureBox2;
 	private: System::Windows::Forms::Label^ label1;
@@ -71,6 +72,13 @@ namespace memoryparking {
 	private: System::Windows::Forms::TextBox^ textBox10;
 	private: System::Windows::Forms::TextBox^ textBox11;
 	private: System::Windows::Forms::TextBox^ textBox12;
+	private: System::Windows::Forms::ContextMenuStrip^ contextMenuStrip1;
+	private: System::Windows::Forms::ListView^ listView1;
+	private: System::Windows::Forms::ImageList^ imageList1;
+
+	private: System::ComponentModel::IContainer^ components;
+
+
 
 
 
@@ -88,7 +96,7 @@ namespace memoryparking {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		System::ComponentModel::Container^ components;
+
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -97,6 +105,7 @@ namespace memoryparking {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			this->components = (gcnew System::ComponentModel::Container());
 			this->featureToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->akazeToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->kazeToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -110,7 +119,6 @@ namespace memoryparking {
 			this->folderBrowserDialog2 = (gcnew System::Windows::Forms::FolderBrowserDialog());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
-			this->listView1 = (gcnew System::Windows::Forms::ListView());
 			this->directoryEntry1 = (gcnew System::DirectoryServices::DirectoryEntry());
 			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
@@ -127,6 +135,9 @@ namespace memoryparking {
 			this->textBox10 = (gcnew System::Windows::Forms::TextBox());
 			this->textBox11 = (gcnew System::Windows::Forms::TextBox());
 			this->textBox12 = (gcnew System::Windows::Forms::TextBox());
+			this->contextMenuStrip1 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
+			this->listView1 = (gcnew System::Windows::Forms::ListView());
+			this->imageList1 = (gcnew System::Windows::Forms::ImageList(this->components));
 			this->menuStrip1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->BeginInit();
@@ -145,27 +156,27 @@ namespace memoryparking {
 			// akazeToolStripMenuItem
 			// 
 			this->akazeToolStripMenuItem->Name = L"akazeToolStripMenuItem";
-			this->akazeToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+			this->akazeToolStripMenuItem->Size = System::Drawing::Size(110, 22);
 			this->akazeToolStripMenuItem->Text = L"A-kaze";
 			this->akazeToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::akazeToolStripMenuItem_Click);
 			// 
 			// kazeToolStripMenuItem
 			// 
 			this->kazeToolStripMenuItem->Name = L"kazeToolStripMenuItem";
-			this->kazeToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+			this->kazeToolStripMenuItem->Size = System::Drawing::Size(110, 22);
 			this->kazeToolStripMenuItem->Text = L"Kaze";
 			this->kazeToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::kazeToolStripMenuItem_Click);
 			// 
 			// siftToolStripMenuItem
 			// 
 			this->siftToolStripMenuItem->Name = L"siftToolStripMenuItem";
-			this->siftToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+			this->siftToolStripMenuItem->Size = System::Drawing::Size(110, 22);
 			this->siftToolStripMenuItem->Text = L"Sift";
 			// 
 			// oRBToolStripMenuItem
 			// 
 			this->oRBToolStripMenuItem->Name = L"oRBToolStripMenuItem";
-			this->oRBToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+			this->oRBToolStripMenuItem->Size = System::Drawing::Size(110, 22);
 			this->oRBToolStripMenuItem->Text = L"ORB";
 			// 
 			// matchingToolStripMenuItem
@@ -237,19 +248,6 @@ namespace memoryparking {
 			this->pictureBox1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
 			this->pictureBox1->TabIndex = 3;
 			this->pictureBox1->TabStop = false;
-			// 
-			// listView1
-			// 
-			this->listView1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(76)), static_cast<System::Int32>(static_cast<System::Byte>(53)),
-				static_cast<System::Int32>(static_cast<System::Byte>(117)));
-			this->listView1->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(76)), static_cast<System::Int32>(static_cast<System::Byte>(53)),
-				static_cast<System::Int32>(static_cast<System::Byte>(117)));
-			this->listView1->HideSelection = false;
-			this->listView1->Location = System::Drawing::Point(392, 78);
-			this->listView1->Name = L"listView1";
-			this->listView1->Size = System::Drawing::Size(140, 284);
-			this->listView1->TabIndex = 4;
-			this->listView1->UseCompatibleStateImageBehavior = false;
 			// 
 			// pictureBox2
 			// 
@@ -364,6 +362,31 @@ namespace memoryparking {
 			this->textBox12->Size = System::Drawing::Size(97, 20);
 			this->textBox12->TabIndex = 19;
 			// 
+			// contextMenuStrip1
+			// 
+			this->contextMenuStrip1->Name = L"contextMenuStrip1";
+			this->contextMenuStrip1->Size = System::Drawing::Size(61, 4);
+			// 
+			// listView1
+			// 
+			this->listView1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(55)), static_cast<System::Int32>(static_cast<System::Byte>(27)),
+				static_cast<System::Int32>(static_cast<System::Byte>(88)));
+			this->listView1->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->listView1->ForeColor = System::Drawing::SystemColors::ControlLightLight;
+			this->listView1->HideSelection = false;
+			this->listView1->Location = System::Drawing::Point(361, 72);
+			this->listView1->Name = L"listView1";
+			this->listView1->Size = System::Drawing::Size(235, 289);
+			this->listView1->TabIndex = 20;
+			this->listView1->UseCompatibleStateImageBehavior = false;
+			this->listView1->View = System::Windows::Forms::View::List;
+			// 
+			// imageList1
+			// 
+			this->imageList1->ColorDepth = System::Windows::Forms::ColorDepth::Depth8Bit;
+			this->imageList1->ImageSize = System::Drawing::Size(16, 16);
+			this->imageList1->TransparentColor = System::Drawing::Color::Transparent;
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -371,6 +394,7 @@ namespace memoryparking {
 			this->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(46)), static_cast<System::Int32>(static_cast<System::Byte>(2)),
 				static_cast<System::Int32>(static_cast<System::Byte>(73)));
 			this->ClientSize = System::Drawing::Size(959, 503);
+			this->Controls->Add(this->listView1);
 			this->Controls->Add(this->textBox12);
 			this->Controls->Add(this->textBox11);
 			this->Controls->Add(this->textBox10);
@@ -386,7 +410,6 @@ namespace memoryparking {
 			this->Controls->Add(this->textBox1);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->pictureBox2);
-			this->Controls->Add(this->listView1);
 			this->Controls->Add(this->pictureBox1);
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->button1);
@@ -428,6 +451,23 @@ namespace memoryparking {
 	}
 
 	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+
+		listView1->Items->Clear();
+		OpenFileDialog^ openFileDialog1 = gcnew OpenFileDialog;
+		openFileDialog1->InitialDirectory = "c:\\";
+		openFileDialog1->Multiselect = true;
+		openFileDialog1->RestoreDirectory = true;
+		if (openFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK)
+		{
+			System::String^ path = openFileDialog1->FileName;
+			for (int i = 0; i < openFileDialog1->FileNames->Length; i++)
+			{
+				listView1->Items->Add(openFileDialog1->FileNames[i]);
+
+			}
+
+		}
+
 	}
 
 	private: System::Void akazeToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
