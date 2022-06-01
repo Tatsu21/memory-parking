@@ -2,6 +2,7 @@
 #include "memoryparking.h";
 #include <msclr\marshal_cppstd.h>
 
+
 namespace memoryparking {
 
 	using namespace System;
@@ -11,6 +12,7 @@ namespace memoryparking {
 	using namespace System::Data;
 	using namespace System::Drawing;
 	using namespace System::Diagnostics;
+	using namespace msclr::interop;
 
 	/// <summary>
 	/// Summary for MyForm
@@ -56,7 +58,7 @@ namespace memoryparking {
 	private: System::Windows::Forms::FolderBrowserDialog^ folderBrowserDialog2;
 	private: System::Windows::Forms::Button^ button2;
 	private: System::Windows::Forms::PictureBox^ pictureBox1;
-	private: System::Windows::Forms::ListView^ listView1;
+
 	private: System::DirectoryServices::DirectoryEntry^ directoryEntry1;
 	private: System::Windows::Forms::PictureBox^ pictureBox2;
 	private: System::Windows::Forms::Label^ label1;
@@ -79,6 +81,10 @@ namespace memoryparking {
 	private: System::Windows::Forms::Label^ label5;
 	private: System::Windows::Forms::Label^ label6;
 	private: System::Windows::Forms::Label^ label7;
+	private: System::Windows::Forms::OpenFileDialog^ openFileDialog1;
+	private: System::Windows::Forms::OpenFileDialog^ openFileDialog2;
+	private: System::Windows::Forms::ListBox^ listBox1;
+
 
 
 
@@ -120,7 +126,6 @@ namespace memoryparking {
 			this->folderBrowserDialog2 = (gcnew System::Windows::Forms::FolderBrowserDialog());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
-			this->listView1 = (gcnew System::Windows::Forms::ListView());
 			this->directoryEntry1 = (gcnew System::DirectoryServices::DirectoryEntry());
 			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
@@ -136,6 +141,9 @@ namespace memoryparking {
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->label7 = (gcnew System::Windows::Forms::Label());
+			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
+			this->openFileDialog2 = (gcnew System::Windows::Forms::OpenFileDialog());
+			this->listBox1 = (gcnew System::Windows::Forms::ListBox());
 			this->menuStrip1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->BeginInit();
@@ -148,7 +156,7 @@ namespace memoryparking {
 					this->kazeToolStripMenuItem, this->siftToolStripMenuItem, this->oRBToolStripMenuItem
 			});
 			this->featureToolStripMenuItem->Name = L"featureToolStripMenuItem";
-			this->featureToolStripMenuItem->Size = System::Drawing::Size(72, 26);
+			this->featureToolStripMenuItem->Size = System::Drawing::Size(72, 24);
 			this->featureToolStripMenuItem->Text = L"Feature";
 			// 
 			// akazeToolStripMenuItem
@@ -186,7 +194,7 @@ namespace memoryparking {
 					this->fLANNToolStripMenuItem
 			});
 			this->matchingToolStripMenuItem->Name = L"matchingToolStripMenuItem";
-			this->matchingToolStripMenuItem->Size = System::Drawing::Size(85, 26);
+			this->matchingToolStripMenuItem->Size = System::Drawing::Size(85, 24);
 			this->matchingToolStripMenuItem->Text = L"Matching";
 			// 
 			// bRUTEFORCEToolStripMenuItem
@@ -210,7 +218,7 @@ namespace memoryparking {
 			});
 			this->menuStrip1->Location = System::Drawing::Point(0, 0);
 			this->menuStrip1->Name = L"menuStrip1";
-			this->menuStrip1->Size = System::Drawing::Size(1279, 30);
+			this->menuStrip1->Size = System::Drawing::Size(1279, 28);
 			this->menuStrip1->TabIndex = 0;
 			this->menuStrip1->Text = L"menuStrip1";
 			// 
@@ -253,26 +261,13 @@ namespace memoryparking {
 			this->pictureBox1->TabIndex = 3;
 			this->pictureBox1->TabStop = false;
 			// 
-			// listView1
-			// 
-			this->listView1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(76)), static_cast<System::Int32>(static_cast<System::Byte>(53)),
-				static_cast<System::Int32>(static_cast<System::Byte>(117)));
-			this->listView1->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(76)), static_cast<System::Int32>(static_cast<System::Byte>(53)),
-				static_cast<System::Int32>(static_cast<System::Byte>(117)));
-			this->listView1->HideSelection = false;
-			this->listView1->Location = System::Drawing::Point(481, 96);
-			this->listView1->Margin = System::Windows::Forms::Padding(4);
-			this->listView1->Name = L"listView1";
-			this->listView1->Size = System::Drawing::Size(185, 349);
-			this->listView1->TabIndex = 4;
-			this->listView1->UseCompatibleStateImageBehavior = false;
-			// 
 			// pictureBox2
 			// 
-			this->pictureBox2->Location = System::Drawing::Point(827, 89);
+			this->pictureBox2->Location = System::Drawing::Point(704, 89);
 			this->pictureBox2->Margin = System::Windows::Forms::Padding(4);
 			this->pictureBox2->Name = L"pictureBox2";
-			this->pictureBox2->Size = System::Drawing::Size(436, 356);
+			this->pictureBox2->Size = System::Drawing::Size(425, 356);
+			this->pictureBox2->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
 			this->pictureBox2->TabIndex = 5;
 			this->pictureBox2->TabStop = false;
 			// 
@@ -280,7 +275,7 @@ namespace memoryparking {
 			// 
 			this->label1->AutoSize = true;
 			this->label1->ForeColor = System::Drawing::SystemColors::ButtonFace;
-			this->label1->Location = System::Drawing::Point(824, 56);
+			this->label1->Location = System::Drawing::Point(701, 63);
 			this->label1->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size(48, 17);
@@ -321,7 +316,8 @@ namespace memoryparking {
 			// 
 			// button3
 			// 
-			this->button3->BackColor = System::Drawing::Color::White;
+			this->button3->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(120)), static_cast<System::Int32>(static_cast<System::Byte>(88)),
+				static_cast<System::Int32>(static_cast<System::Byte>(166)));
 			this->button3->FlatStyle = System::Windows::Forms::FlatStyle::System;
 			this->button3->Location = System::Drawing::Point(1012, 498);
 			this->button3->Margin = System::Windows::Forms::Padding(4);
@@ -396,6 +392,24 @@ namespace memoryparking {
 			this->label7->Size = System::Drawing::Size(0, 17);
 			this->label7->TabIndex = 25;
 			// 
+			// openFileDialog1
+			// 
+			this->openFileDialog1->FileName = L"openFileDialog1";
+			// 
+			// openFileDialog2
+			// 
+			this->openFileDialog2->FileName = L"openFileDialog2";
+			// 
+			// listBox1
+			// 
+			this->listBox1->FormattingEnabled = true;
+			this->listBox1->ItemHeight = 16;
+			this->listBox1->Location = System::Drawing::Point(481, 87);
+			this->listBox1->Name = L"listBox1";
+			this->listBox1->RightToLeft = System::Windows::Forms::RightToLeft::No;
+			this->listBox1->Size = System::Drawing::Size(185, 356);
+			this->listBox1->TabIndex = 26;
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
@@ -403,6 +417,7 @@ namespace memoryparking {
 			this->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(46)), static_cast<System::Int32>(static_cast<System::Byte>(2)),
 				static_cast<System::Int32>(static_cast<System::Byte>(73)));
 			this->ClientSize = System::Drawing::Size(1279, 619);
+			this->Controls->Add(this->listBox1);
 			this->Controls->Add(this->label7);
 			this->Controls->Add(this->label6);
 			this->Controls->Add(this->label5);
@@ -417,7 +432,6 @@ namespace memoryparking {
 			this->Controls->Add(this->textBox1);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->pictureBox2);
-			this->Controls->Add(this->listView1);
 			this->Controls->Add(this->pictureBox1);
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->button1);
@@ -435,7 +449,7 @@ namespace memoryparking {
 
 		}
 #pragma endregion
-
+		
 	public:int featureSelect = 0;
 	private: System::Void button1_Click_1(System::Object^ sender, System::EventArgs^ e) {
 		OpenFileDialog^ openFileDialog1 = gcnew OpenFileDialog;
@@ -451,15 +465,25 @@ namespace memoryparking {
 		openFileDialog1->RestoreDirectory = true;
 		if (openFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 		{
-			System::String^ path = openFileDialog1->FileName;
-			pictureBox1->ImageLocation = path;
-
+			pictureBox1->ImageLocation = openFileDialog1->FileName;
 		}
-
-
 	}
 
 	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+
+		listBox1->Items->Clear();
+		openFileDialog2->InitialDirectory = "c:\\";
+		openFileDialog2->Multiselect = true;
+		openFileDialog2->RestoreDirectory = true;
+		if (openFileDialog2->ShowDialog() == System::Windows::Forms::DialogResult::OK)
+		{
+			for (int i = 0; i < openFileDialog2->FileNames->Length; i++)
+			{
+				listBox1->Items->Add(openFileDialog2->FileNames[i]);
+			}
+
+		}
+
 	}
 
 	private: System::Void akazeToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -497,44 +521,55 @@ namespace memoryparking {
 		label7->Text = "n Octave Layers";
 
 	}
+	
 	private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
-
+		std::vector<std::string> imgDataSet;
 		label2->Hide();
+		std::string imgPath = marshal_as<std::string>(pictureBox1->ImageLocation);
+		System::String^ fileName;
+		for (int i = 0; i < openFileDialog2->FileNames->Length; i++)
+		{
+			fileName = openFileDialog2->FileNames[i];
+			imgDataSet.push_back(marshal_as<std::string>(fileName));
+		}
 		if (featureSelect == 1)
 		{
-			int descSize = stoi(msclr::interop::marshal_as<std::string>(textBox1->Text));
-			int descChan = stoi(msclr::interop::marshal_as<std::string>(textBox3->Text));
-			float thresh = stof(msclr::interop::marshal_as<std::string>(textBox5->Text));
-			int nOct = stoi(msclr::interop::marshal_as<std::string>(textBox7->Text));
-			int nOctL = stoi(msclr::interop::marshal_as<std::string>(textBox9->Text));
-			AKAZEMatching(descSize, descChan, thresh, nOct, nOctL);
+			int descSize = stoi(marshal_as<std::string>(textBox1->Text));
+			int descChan = stoi(marshal_as<std::string>(textBox3->Text));
+			float thresh = stof(marshal_as<std::string>(textBox5->Text));
+			int nOct = stoi(marshal_as<std::string>(textBox7->Text));
+			int nOctL = stoi(marshal_as<std::string>(textBox9->Text));
+			pictureBox2->ImageLocation = marshal_as<System::String^>(AKAZEMatching(imgPath, imgDataSet, descSize, descChan, thresh, nOct, nOctL));
+			
 		}
 		if (featureSelect == 2) {
-			bool ext = ((msclr::interop::marshal_as<std::string>(textBox1->Text))=="true");
-			bool up = ((msclr::interop::marshal_as<std::string>(textBox3->Text))=="true");
-			float thresh = stof(msclr::interop::marshal_as<std::string>(textBox5->Text));
-			int nOct = stoi(msclr::interop::marshal_as<std::string>(textBox7->Text));
-			int nOctL = stoi(msclr::interop::marshal_as<std::string>(textBox9->Text));
+			bool ext = ((marshal_as<std::string>(textBox1->Text))=="true");
+			bool up = ((marshal_as<std::string>(textBox3->Text))=="true");
+			float thresh = stof(marshal_as<std::string>(textBox5->Text));
+			int nOct = stoi(marshal_as<std::string>(textBox7->Text));
+			int nOctL = stoi(marshal_as<std::string>(textBox9->Text));
 			KAZEMatching(ext, up, thresh, nOct, nOctL);
 		}
 		if (featureSelect == 3)
 		{
-			int nFeat = stoi(msclr::interop::marshal_as<std::string>(textBox1->Text));
-			int nOctL = stoi(msclr::interop::marshal_as<std::string>(textBox3->Text));
-			double contrThr = stod(msclr::interop::marshal_as<std::string>(textBox5->Text));
-			double edgeThr = stod(msclr::interop::marshal_as<std::string>(textBox7->Text));
-			double Sigma = stod(msclr::interop::marshal_as<std::string>(textBox9->Text));
+			int nFeat = stoi(marshal_as<std::string>(textBox1->Text));
+			int nOctL = stoi(marshal_as<std::string>(textBox3->Text));
+			double contrThr = stod(marshal_as<std::string>(textBox5->Text));
+			double edgeThr = stod(marshal_as<std::string>(textBox7->Text));
+			double Sigma = stod(marshal_as<std::string>(textBox9->Text));
 			SIFTMatching(nFeat, nOctL, contrThr, edgeThr ,Sigma);
 		}
 		if (featureSelect == 4)
 		{
-			int descSize = stoi(msclr::interop::marshal_as<std::string>(textBox1->Text));
-			int descChan = stoi(msclr::interop::marshal_as<std::string>(textBox3->Text));
-			float thresh = stof(msclr::interop::marshal_as<std::string>(textBox5->Text));
-			int nOct = stoi(msclr::interop::marshal_as<std::string>(textBox7->Text));
-			int nOctL = stoi(msclr::interop::marshal_as<std::string>(textBox9->Text));
+			int descSize = stoi(marshal_as<std::string>(textBox1->Text));
+			int descChan = stoi(marshal_as<std::string>(textBox3->Text));
+			float thresh = stof(marshal_as<std::string>(textBox5->Text));
+			int nOct = stoi(marshal_as<std::string>(textBox7->Text));
+			int nOctL = stoi(marshal_as<std::string>(textBox9->Text));
 			ORBMatching(descSize, descChan, thresh, nOct, nOctL);
 		}
+		//pictureBox1->ImageLocation = ;
+
 	}
 };
 	

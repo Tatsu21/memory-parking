@@ -85,7 +85,7 @@ Mat FeatureROI(string mimg, Mat img) {
 	return mask;
 }
 
-Feature AKAZEe(Feature feature, string pimg, string mimg, int w, int h, int type, AKAZE::DescriptorType descriptor_type = AKAZE::DESCRIPTOR_KAZE, int descriptor_size = 64, int descriptor_channels = 3,
+Feature AKAZEeMask(Feature feature, string pimg, string mimg, int w, int h, int type, AKAZE::DescriptorType descriptor_type = AKAZE::DESCRIPTOR_KAZE, int descriptor_size = 64, int descriptor_channels = 3,
 	float threshold = 0.0012f, int nOctaves = 5, int nOctaveLayers = 5, KAZE::DiffusivityType diffusivity = KAZE::DIFF_PM_G1) {
 	Mat img = imread(pimg), des;
 	if (img.empty()) {
@@ -128,6 +128,37 @@ Feature AKAZEe(Feature feature, string pimg, string mimg, int w, int h, int type
 			feature.AddDes2(des);
 			feature.AddKp2(kp);
 			feature.addImg2(mask);
+		}
+	}
+	return feature;
+}
+Feature AKAZEe(Feature feature, string pimg, int w, int h, int type, AKAZE::DescriptorType descriptor_type = AKAZE::DESCRIPTOR_KAZE, int descriptor_size = 64, int descriptor_channels = 3,
+	float threshold = 0.0012f, int nOctaves = 5, int nOctaveLayers = 5, KAZE::DiffusivityType diffusivity = KAZE::DIFF_PM_G1) {
+	Mat img = imread(pimg), des;
+	if (img.empty()) {
+		cout << "Could not open or find the image!\n" << endl;
+
+	}
+	else {
+		if (type == 1) {
+
+
+			Ptr<AKAZE> detector = AKAZE::create(descriptor_type, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaves, KAZE::DIFF_PM_G1);
+			vector<KeyPoint> kp;
+			detector->detectAndCompute(img, noArray(), kp, des);
+			feature.AddDes1(des);
+			feature.AddKp1(kp);
+			feature.addImg1(img);
+		}
+		else if (type == 2) {
+			
+			Ptr<AKAZE> detector = AKAZE::create(descriptor_type, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaves, KAZE::DIFF_PM_G1);
+			vector<KeyPoint> kp;
+
+			detector->detectAndCompute(img, noArray(), kp, des);
+			feature.AddDes2(des);
+			feature.AddKp2(kp);
+			feature.addImg2(img);
 		}
 	}
 	return feature;
@@ -336,7 +367,7 @@ auto BF(int photos, int step, Feature feature, float thresh, int matchingtyp) {
 	return BFval{ photo_matches, percent };
 }
 
-void AKAZEMatching(int descriptor_size, int descriptor_channels,
+string AKAZEMatching(string path, vector<string>imgDataSet, int descriptor_size, int descriptor_channels,
 	float threshold, int nOctaves, int nOctaveLayers)
 {
 	cout << "akaze";
@@ -353,13 +384,13 @@ void AKAZEMatching(int descriptor_size, int descriptor_channels,
 	vector<float> verifi;
 	vector<int> goods;
 	//train images
-	for (int i = 0; i < 10; i++) {
-		feature = AKAZEe(feature, spath + train[i] + ".jpg", mspath + train[i] + ".jpg", 750, 750, 1, 
-			AKAZE::DESCRIPTOR_KAZE, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaveLayers, KAZE::DIFF_PM_G1);
-	}
+	
+	feature = AKAZEe(feature, path, 750, 750, 1, 
+		AKAZE::DESCRIPTOR_KAZE, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaveLayers, KAZE::DIFF_PM_G1);
+	
 
-	for (int i = 0; i < 26; i++) {
-		feature = AKAZEe(feature, path1 + imgs[i] + ".jpg", mpath + imgs[i] + ".jpg", 750, 750, 2, 
+	for (int i = 0; i < imgDataSet.size(); i++) {
+		feature = AKAZEe(feature, imgDataSet[i], 750, 750, 2,
 			AKAZE::DESCRIPTOR_KAZE, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaveLayers, KAZE::DIFF_PM_G1);
 	}
 
@@ -385,12 +416,14 @@ void AKAZEMatching(int descriptor_size, int descriptor_channels,
 
 			for (int i = 0; i < goods.size(); i++) {
 				auto [photo_matches, percent] = BF(nr, goods[i], feature, 0.75f, 1);
-
+				feature.addfinalImg(feature.ReturnImg2()[goods[i]]);
+				imwrite("result/good2/save_0.jpg", feature.ReturnImg2()[goods[i]]);
 				imwrite("result/good/save_" + to_string(nr) + ".jpg", photo_matches);
 				nr++;
 			}
 		}
 	}
+	return "result/good2/save_0.jpg";
 }
 
 void ORBMatching(int descriptor_size, int descriptor_channels,

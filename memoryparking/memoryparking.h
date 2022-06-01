@@ -1,5 +1,7 @@
 #pragma once
-void AKAZEMatching(int descriptor_size, int descriptor_channels,
+#include <string>
+#include <vector>
+std::string AKAZEMatching(std::string path, std::vector<std::string>imgDataSet, int descriptor_size, int descriptor_channels,
 	float threshold, int nOctaves, int nOctaveLayers);
 void ORBMatching(int descriptor_size, int descriptor_channels,
 	float threshold, int nOctaves, int nOctaveLayers);

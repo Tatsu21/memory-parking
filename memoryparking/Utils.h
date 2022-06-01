@@ -11,6 +11,7 @@ using namespace std;
 
 class Feature {
 protected:
+	Mat finalImg;
 	vector<Mat> des1;
 	vector<Mat> des2;
 	vector<Mat> img1;
@@ -18,7 +19,14 @@ protected:
 	vector<vector<KeyPoint>> kp1;
 	vector<vector<KeyPoint>> kp2;
 public:
-
+	void addfinalImg(Mat finalImg1)
+	{
+		this->finalImg = finalImg1;
+	}
+	Mat getFinalImg()
+	{
+		return this->finalImg;
+	}
 	void addImg1(Mat img) {
 		img1.push_back(img);
 	}
