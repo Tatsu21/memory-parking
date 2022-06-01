@@ -1,0 +1,9 @@
+#pragma once
+void AKAZEMatching(int descriptor_size, int descriptor_channels,
+	float threshold, int nOctaves, int nOctaveLayers);
+void ORBMatching(int descriptor_size, int descriptor_channels,
+	float threshold, int nOctaves, int nOctaveLayers);
+void KAZEMatching(bool extended, bool upright, 
+	float threshold, int nOctaves, int nOctaveLayers);
+void SIFTMatching(int nFeatures, int nOctaveLayers, double contrastThreshold, 
+	double edgeThreshold, double sigma);

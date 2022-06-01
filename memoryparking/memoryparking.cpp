@@ -180,9 +180,6 @@ Feature KAZEe(Feature feature, string pimg, string mimg, int w, int h, int type,
 	return feature;
 }
 
-// tip; valoare1; valoare2; valoare3
-// exemplu : float; 0.02f; 0.03f; 0.04f; etc
-//			 int; 1; 2; 3; 4;
 namespace FT
 {
 	Feature SIFT(Feature feature, string pimg, string mimg, int w, int h, int type, int nFeatures = 0, int nOctaveLayers = 3, double contrastThreshold = 0.09, double edgeThreshold = 20.00,

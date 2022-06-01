@@ -61,25 +61,25 @@ namespace memoryparking {
 	private: System::Windows::Forms::PictureBox^ pictureBox2;
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::TextBox^ textBox1;
-	private: System::Windows::Forms::TextBox^ textBox2;
+
 	private: System::Windows::Forms::TextBox^ textBox3;
-	private: System::Windows::Forms::TextBox^ textBox4;
+
 	private: System::Windows::Forms::TextBox^ textBox5;
-	private: System::Windows::Forms::TextBox^ textBox6;
+
 	private: System::Windows::Forms::TextBox^ textBox7;
-	private: System::Windows::Forms::TextBox^ textBox8;
+
 	private: System::Windows::Forms::Button^ button3;
 	private: System::Windows::Forms::TextBox^ textBox9;
-	private: System::Windows::Forms::TextBox^ textBox10;
-	private: System::Windows::Forms::TextBox^ textBox11;
-	private: System::Windows::Forms::TextBox^ textBox12;
+
+
+
 	private: System::Windows::Forms::Label^ label2;
 	private: System::Windows::Forms::Label^ label3;
 	private: System::Windows::Forms::Label^ label4;
 	private: System::Windows::Forms::Label^ label5;
 	private: System::Windows::Forms::Label^ label6;
 	private: System::Windows::Forms::Label^ label7;
-	private: System::Windows::Forms::Label^ label8;
+
 
 
 
@@ -125,25 +125,17 @@ namespace memoryparking {
 			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
 			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox4 = (gcnew System::Windows::Forms::TextBox());
 			this->textBox5 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox6 = (gcnew System::Windows::Forms::TextBox());
 			this->textBox7 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox8 = (gcnew System::Windows::Forms::TextBox());
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->textBox9 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox10 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox11 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox12 = (gcnew System::Windows::Forms::TextBox());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->label7 = (gcnew System::Windows::Forms::Label());
-			this->label8 = (gcnew System::Windows::Forms::Label());
 			this->menuStrip1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->BeginInit();
@@ -156,7 +148,7 @@ namespace memoryparking {
 					this->kazeToolStripMenuItem, this->siftToolStripMenuItem, this->oRBToolStripMenuItem
 			});
 			this->featureToolStripMenuItem->Name = L"featureToolStripMenuItem";
-			this->featureToolStripMenuItem->Size = System::Drawing::Size(72, 24);
+			this->featureToolStripMenuItem->Size = System::Drawing::Size(72, 26);
 			this->featureToolStripMenuItem->Text = L"Feature";
 			// 
 			// akazeToolStripMenuItem
@@ -194,7 +186,7 @@ namespace memoryparking {
 					this->fLANNToolStripMenuItem
 			});
 			this->matchingToolStripMenuItem->Name = L"matchingToolStripMenuItem";
-			this->matchingToolStripMenuItem->Size = System::Drawing::Size(85, 24);
+			this->matchingToolStripMenuItem->Size = System::Drawing::Size(85, 26);
 			this->matchingToolStripMenuItem->Text = L"Matching";
 			// 
 			// bRUTEFORCEToolStripMenuItem
@@ -218,7 +210,7 @@ namespace memoryparking {
 			});
 			this->menuStrip1->Location = System::Drawing::Point(0, 0);
 			this->menuStrip1->Name = L"menuStrip1";
-			this->menuStrip1->Size = System::Drawing::Size(1279, 28);
+			this->menuStrip1->Size = System::Drawing::Size(1279, 30);
 			this->menuStrip1->TabIndex = 0;
 			this->menuStrip1->Text = L"menuStrip1";
 			// 
@@ -303,14 +295,6 @@ namespace memoryparking {
 			this->textBox1->Size = System::Drawing::Size(128, 22);
 			this->textBox1->TabIndex = 7;
 			// 
-			// textBox2
-			// 
-			this->textBox2->Location = System::Drawing::Point(16, 540);
-			this->textBox2->Margin = System::Windows::Forms::Padding(4);
-			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(128, 22);
-			this->textBox2->TabIndex = 8;
-			// 
 			// textBox3
 			// 
 			this->textBox3->Location = System::Drawing::Point(172, 487);
@@ -318,14 +302,6 @@ namespace memoryparking {
 			this->textBox3->Name = L"textBox3";
 			this->textBox3->Size = System::Drawing::Size(128, 22);
 			this->textBox3->TabIndex = 9;
-			// 
-			// textBox4
-			// 
-			this->textBox4->Location = System::Drawing::Point(172, 540);
-			this->textBox4->Margin = System::Windows::Forms::Padding(4);
-			this->textBox4->Name = L"textBox4";
-			this->textBox4->Size = System::Drawing::Size(128, 22);
-			this->textBox4->TabIndex = 10;
 			// 
 			// textBox5
 			// 
@@ -335,14 +311,6 @@ namespace memoryparking {
 			this->textBox5->Size = System::Drawing::Size(128, 22);
 			this->textBox5->TabIndex = 11;
 			// 
-			// textBox6
-			// 
-			this->textBox6->Location = System::Drawing::Point(325, 540);
-			this->textBox6->Margin = System::Windows::Forms::Padding(4);
-			this->textBox6->Name = L"textBox6";
-			this->textBox6->Size = System::Drawing::Size(128, 22);
-			this->textBox6->TabIndex = 12;
-			// 
 			// textBox7
 			// 
 			this->textBox7->Location = System::Drawing::Point(481, 487);
@@ -350,14 +318,6 @@ namespace memoryparking {
 			this->textBox7->Name = L"textBox7";
 			this->textBox7->Size = System::Drawing::Size(128, 22);
 			this->textBox7->TabIndex = 13;
-			// 
-			// textBox8
-			// 
-			this->textBox8->Location = System::Drawing::Point(481, 540);
-			this->textBox8->Margin = System::Windows::Forms::Padding(4);
-			this->textBox8->Name = L"textBox8";
-			this->textBox8->Size = System::Drawing::Size(128, 22);
-			this->textBox8->TabIndex = 14;
 			// 
 			// button3
 			// 
@@ -380,30 +340,6 @@ namespace memoryparking {
 			this->textBox9->Size = System::Drawing::Size(128, 22);
 			this->textBox9->TabIndex = 16;
 			// 
-			// textBox10
-			// 
-			this->textBox10->Location = System::Drawing::Point(635, 540);
-			this->textBox10->Margin = System::Windows::Forms::Padding(4);
-			this->textBox10->Name = L"textBox10";
-			this->textBox10->Size = System::Drawing::Size(128, 22);
-			this->textBox10->TabIndex = 17;
-			// 
-			// textBox11
-			// 
-			this->textBox11->Location = System::Drawing::Point(784, 540);
-			this->textBox11->Margin = System::Windows::Forms::Padding(4);
-			this->textBox11->Name = L"textBox11";
-			this->textBox11->Size = System::Drawing::Size(128, 22);
-			this->textBox11->TabIndex = 18;
-			// 
-			// textBox12
-			// 
-			this->textBox12->Location = System::Drawing::Point(784, 487);
-			this->textBox12->Margin = System::Windows::Forms::Padding(4);
-			this->textBox12->Name = L"textBox12";
-			this->textBox12->Size = System::Drawing::Size(128, 22);
-			this->textBox12->TabIndex = 19;
-			// 
 			// label2
 			// 
 			this->label2->AutoSize = true;
@@ -421,9 +357,8 @@ namespace memoryparking {
 			this->label3->ForeColor = System::Drawing::SystemColors::ButtonFace;
 			this->label3->Location = System::Drawing::Point(12, 466);
 			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(46, 17);
+			this->label3->Size = System::Drawing::Size(0, 17);
 			this->label3->TabIndex = 21;
-			this->label3->Text = L"label3";
 			// 
 			// label4
 			// 
@@ -431,9 +366,8 @@ namespace memoryparking {
 			this->label4->ForeColor = System::Drawing::SystemColors::ButtonFace;
 			this->label4->Location = System::Drawing::Point(169, 466);
 			this->label4->Name = L"label4";
-			this->label4->Size = System::Drawing::Size(46, 17);
+			this->label4->Size = System::Drawing::Size(0, 17);
 			this->label4->TabIndex = 22;
-			this->label4->Text = L"label4";
 			// 
 			// label5
 			// 
@@ -441,9 +375,8 @@ namespace memoryparking {
 			this->label5->ForeColor = System::Drawing::SystemColors::ButtonFace;
 			this->label5->Location = System::Drawing::Point(322, 466);
 			this->label5->Name = L"label5";
-			this->label5->Size = System::Drawing::Size(46, 17);
+			this->label5->Size = System::Drawing::Size(0, 17);
 			this->label5->TabIndex = 23;
-			this->label5->Text = L"label5";
 			// 
 			// label6
 			// 
@@ -451,9 +384,8 @@ namespace memoryparking {
 			this->label6->ForeColor = System::Drawing::SystemColors::ButtonFace;
 			this->label6->Location = System::Drawing::Point(478, 466);
 			this->label6->Name = L"label6";
-			this->label6->Size = System::Drawing::Size(46, 17);
+			this->label6->Size = System::Drawing::Size(0, 17);
 			this->label6->TabIndex = 24;
-			this->label6->Text = L"label6";
 			// 
 			// label7
 			// 
@@ -461,19 +393,8 @@ namespace memoryparking {
 			this->label7->ForeColor = System::Drawing::SystemColors::ButtonFace;
 			this->label7->Location = System::Drawing::Point(632, 466);
 			this->label7->Name = L"label7";
-			this->label7->Size = System::Drawing::Size(46, 17);
+			this->label7->Size = System::Drawing::Size(0, 17);
 			this->label7->TabIndex = 25;
-			this->label7->Text = L"label7";
-			// 
-			// label8
-			// 
-			this->label8->AutoSize = true;
-			this->label8->ForeColor = System::Drawing::SystemColors::ButtonFace;
-			this->label8->Location = System::Drawing::Point(781, 466);
-			this->label8->Name = L"label8";
-			this->label8->Size = System::Drawing::Size(46, 17);
-			this->label8->TabIndex = 26;
-			this->label8->Text = L"label8";
 			// 
 			// MyForm
 			// 
@@ -482,25 +403,17 @@ namespace memoryparking {
 			this->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(46)), static_cast<System::Int32>(static_cast<System::Byte>(2)),
 				static_cast<System::Int32>(static_cast<System::Byte>(73)));
 			this->ClientSize = System::Drawing::Size(1279, 619);
-			this->Controls->Add(this->label8);
 			this->Controls->Add(this->label7);
 			this->Controls->Add(this->label6);
 			this->Controls->Add(this->label5);
 			this->Controls->Add(this->label4);
 			this->Controls->Add(this->label3);
 			this->Controls->Add(this->label2);
-			this->Controls->Add(this->textBox12);
-			this->Controls->Add(this->textBox11);
-			this->Controls->Add(this->textBox10);
 			this->Controls->Add(this->textBox9);
 			this->Controls->Add(this->button3);
-			this->Controls->Add(this->textBox8);
 			this->Controls->Add(this->textBox7);
-			this->Controls->Add(this->textBox6);
 			this->Controls->Add(this->textBox5);
-			this->Controls->Add(this->textBox4);
 			this->Controls->Add(this->textBox3);
-			this->Controls->Add(this->textBox2);
 			this->Controls->Add(this->textBox1);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->pictureBox2);
