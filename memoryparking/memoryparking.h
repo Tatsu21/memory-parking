@@ -3,9 +3,9 @@
 #include <vector>
 std::string AKAZEMatching(std::string path, std::vector<std::string>imgDataSet, int descriptor_size, int descriptor_channels,
 	float threshold, int nOctaves, int nOctaveLayers);
-void ORBMatching(int descriptor_size, int descriptor_channels,
+std::string ORBMatching(std::string path, std::vector<std::string>imgDataSet, int descriptor_size, int descriptor_channels,
 	float threshold, int nOctaves, int nOctaveLayers);
-void KAZEMatching(bool extended, bool upright, 
+std::string KAZEMatching(std::string path, std::vector<std::string>imgDataSet, bool extended, bool upright,
 	float threshold, int nOctaves, int nOctaveLayers);
-void SIFTMatching(int nFeatures, int nOctaveLayers, double contrastThreshold, 
+std::string SIFTMatching(std::string path, std::vector<std::string>imgDataSet, int nFeatures, int nOctaveLayers, double contrastThreshold,
 	double edgeThreshold, double sigma);

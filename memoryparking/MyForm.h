@@ -113,6 +113,7 @@ namespace memoryparking {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(MyForm::typeid));
 			this->featureToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->akazeToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->kazeToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -436,10 +437,11 @@ namespace memoryparking {
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->menuStrip1);
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->MainMenuStrip = this->menuStrip1;
 			this->Margin = System::Windows::Forms::Padding(4);
 			this->Name = L"MyForm";
-			this->Text = L"MyForm";
+			this->Text = L"Memory Parking";
 			this->menuStrip1->ResumeLayout(false);
 			this->menuStrip1->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
@@ -493,6 +495,11 @@ namespace memoryparking {
 		label5->Text = "Threshold";
 		label6->Text = "n Octave";
 		label7->Text = "n Octave Layers";
+		textBox1->Text = "64";
+		textBox3->Text = "3";
+		textBox5->Text = "0.0012";
+		textBox7->Text = "5";
+		textBox9->Text = "5";
 	}
 	private: System::Void kazeToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 		featureSelect = 2;
@@ -501,6 +508,11 @@ namespace memoryparking {
 		label5->Text = "Threshold";
 		label6->Text = "n Octave";
 		label7->Text = "n Octave Layers";
+		textBox1->Text = "false";
+		textBox3->Text = "false";
+		textBox5->Text = "0.001";
+		textBox7->Text = "4";
+		textBox9->Text = "4";
 
 	}
 	private: System::Void siftToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -510,6 +522,11 @@ namespace memoryparking {
 		label5->Text = "Contrast Threshold";
 		label6->Text = "Edge Threshold";
 		label7->Text = "Sigma";
+		textBox1->Text = "0";
+		textBox3->Text = "3";
+		textBox5->Text = "0.09";
+		textBox7->Text = "20.00";
+		textBox9->Text = "0.20";
 
 	}
 	private: System::Void oRBToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -519,6 +536,11 @@ namespace memoryparking {
 		label5->Text = "Threshold";
 		label6->Text = "n Octave";
 		label7->Text = "n Octave Layers";
+		textBox1->Text = "64";
+		textBox3->Text = "3";
+		textBox5->Text = "0.0012";
+		textBox7->Text = "5";
+		textBox9->Text = "5";
 
 	}
 	
@@ -548,7 +570,8 @@ namespace memoryparking {
 			float thresh = stof(marshal_as<std::string>(textBox5->Text));
 			int nOct = stoi(marshal_as<std::string>(textBox7->Text));
 			int nOctL = stoi(marshal_as<std::string>(textBox9->Text));
-			KAZEMatching(ext, up, thresh, nOct, nOctL);
+			pictureBox2->ImageLocation = marshal_as<System::String^>(KAZEMatching(imgPath, imgDataSet, ext, up, thresh, nOct, nOctL));
+			
 		}
 		if (featureSelect == 3)
 		{
@@ -557,7 +580,8 @@ namespace memoryparking {
 			double contrThr = stod(marshal_as<std::string>(textBox5->Text));
 			double edgeThr = stod(marshal_as<std::string>(textBox7->Text));
 			double Sigma = stod(marshal_as<std::string>(textBox9->Text));
-			SIFTMatching(nFeat, nOctL, contrThr, edgeThr ,Sigma);
+			pictureBox2->ImageLocation = marshal_as<System::String^>(SIFTMatching(imgPath, imgDataSet, nFeat, nOctL, contrThr, edgeThr, Sigma));
+
 		}
 		if (featureSelect == 4)
 		{
@@ -566,7 +590,7 @@ namespace memoryparking {
 			float thresh = stof(marshal_as<std::string>(textBox5->Text));
 			int nOct = stoi(marshal_as<std::string>(textBox7->Text));
 			int nOctL = stoi(marshal_as<std::string>(textBox9->Text));
-			ORBMatching(descSize, descChan, thresh, nOct, nOctL);
+			pictureBox2->ImageLocation = marshal_as<System::String^>(ORBMatching(imgPath, imgDataSet, descSize, descChan, thresh, nOct, nOctL));
 		}
 		//pictureBox1->ImageLocation = ;
 

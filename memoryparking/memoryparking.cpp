@@ -164,7 +164,8 @@ Feature AKAZEe(Feature feature, string pimg, int w, int h, int type, AKAZE::Desc
 	return feature;
 }
 
-Feature KAZEe(Feature feature, string pimg, string mimg, int w, int h, int type, bool extended = false, bool upright = false, float threshold = 0.001f, int nOctaves = 4, int nOctaveLayers = 4, KAZE::DiffusivityType diffusivity = KAZE::DIFF_PM_G2) {
+Feature KAZEeMask(Feature feature, string pimg, string mimg, int w, int h, int type,
+	bool extended = false, bool upright = false, float threshold = 0.001f, int nOctaves = 4, int nOctaveLayers = 4, KAZE::DiffusivityType diffusivity = KAZE::DIFF_PM_G2) {
 	Mat img = imread(pimg), des;
 	if (img.empty()) {
 		cout << "Could not open or find the image!\n" << endl;
@@ -210,11 +211,43 @@ Feature KAZEe(Feature feature, string pimg, string mimg, int w, int h, int type,
 	}
 	return feature;
 }
+Feature KAZEe(Feature feature, string pimg, int w, int h, int type, 
+	bool extended = false, bool upright = false, float threshold = 0.001f, int nOctaves = 4, int nOctaveLayers = 4, KAZE::DiffusivityType diffusivity = KAZE::DIFF_PM_G2) {
+	Mat img = imread(pimg), des;
+	if (img.empty()) {
+		cout << "Could not open or find the image!\n" << endl;
+	}
+
+	else {
+		if (type == 1) {
+			
+
+			
+			Ptr<KAZE> detector = KAZE::create(extended, upright, threshold, nOctaveLayers, diffusivity);
+			vector<KeyPoint> kp;
+			detector->detectAndCompute(img, noArray(), kp, des);
+			feature.AddDes1(des);
+			feature.AddKp1(kp);
+			feature.addImg1(img);
+		}
+		else if (type == 2) {
+			
+			Ptr<KAZE> detector = KAZE::create(extended, upright, threshold, nOctaveLayers, diffusivity);
+			vector<KeyPoint> kp;
+
+			detector->detectAndCompute(img, noArray(), kp, des);
+			feature.AddDes2(des);
+			feature.AddKp2(kp);
+			feature.addImg2(img);
+		}
+	}
+	return feature;
+}
 
 namespace FT
 {
-	Feature SIFT(Feature feature, string pimg, string mimg, int w, int h, int type, int nFeatures = 0, int nOctaveLayers = 3, double contrastThreshold = 0.09, double edgeThreshold = 20.00,
-		double sigma = 0.20) {
+	Feature SIFTMask(Feature feature, string pimg, string mimg, int w, int h, int type, 
+		int nFeatures = 0, int nOctaveLayers = 3, double contrastThreshold = 0.09, double edgeThreshold = 20.00,double sigma = 0.20) {
 		Mat img = imread(pimg), des;
 		if (img.empty()) {
 			cout << "Could not open or find the image!\n" << endl;
@@ -260,10 +293,40 @@ namespace FT
 		}
 		return feature;
 	}
+	Feature SIFT(Feature feature, string pimg, int w, int h, int type,
+		int nFeatures = 0, int nOctaveLayers = 3, double contrastThreshold = 0.09, double edgeThreshold = 20.00,double sigma = 0.20) {
+		Mat img = imread(pimg), des;
+		if (img.empty()) {
+			cout << "Could not open or find the image!\n" << endl;
+
+		}
+		else {
+			if (type == 1) {
+				
+				Ptr<cv::SIFT> detector = SIFT::create(nFeatures, nOctaveLayers, contrastThreshold, edgeThreshold, sigma);
+				vector<KeyPoint> kp;
+				detector->detectAndCompute(img, noArray(), kp, des);
+				feature.AddDes1(des);
+				feature.AddKp1(kp);
+				feature.addImg1(img);
+			}
+			else if (type == 2) {
+				
+				Ptr<cv::SIFT> detector = SIFT::create(nFeatures, nOctaveLayers, contrastThreshold, edgeThreshold, sigma);
+				vector<KeyPoint> kp;
+
+				detector->detectAndCompute(img, noArray(), kp, des);
+				feature.AddDes2(des);
+				feature.AddKp2(kp);
+				feature.addImg2(img);
+			}
+		}
+		return feature;
+	}
 }
 
-Feature ORBb(Feature feature, string pimg, string mimg, int w, int h, int type, int descriptor_size = 64, int descriptor_channels = 3,
-	float threshold = 0.0012f, int nOctaves = 5, int nOctaveLayers = 5)
+Feature ORBbMask(Feature feature, string pimg, string mimg, int w, int h, int type, 
+	int descriptor_size = 64, int descriptor_channels = 3,float threshold = 0.0012f, int nOctaves = 5, int nOctaveLayers = 5)
 {
 	Mat img = imread(pimg), des;
 	if (img.empty()) {
@@ -301,6 +364,42 @@ Feature ORBb(Feature feature, string pimg, string mimg, int w, int h, int type, 
 			cvtColor(mask, mask, COLOR_BGR2GRAY);
 
 			resize(img, img, Size(w, h), 0.8, 0.8);
+			Ptr<ORB> detector = ORB::create(300, 1.1, 16, 31, 0, 2, cv::ORB::HARRIS_SCORE, 31, 70);
+			vector<KeyPoint> kp;
+
+			detector->detectAndCompute(img, noArray(), kp, des);
+			feature.AddDes2(des);
+			feature.AddKp2(kp);
+			feature.addImg2(img);
+
+		}
+	}
+	return feature;
+}
+Feature ORBb(Feature feature, string pimg, int w, int h, int type,
+	int descriptor_size = 64, int descriptor_channels = 3,float threshold = 0.0012f, int nOctaves = 5, int nOctaveLayers = 5)
+{
+	Mat img = imread(pimg), des;
+	if (img.empty()) {
+		cout << "Could not open or find the image!\n" << endl;
+
+	}
+	else {
+		if (type == 1) {
+			
+			
+			Ptr<ORB> detector = ORB::create(300, 1.1, 16, 31, 0, 2, cv::ORB::HARRIS_SCORE, 31, 70);
+			vector<KeyPoint> kp;
+
+			detector->detectAndCompute(img, noArray(), kp, des);
+			feature.AddDes1(des);
+			feature.AddKp1(kp);
+			feature.addImg1(img);
+
+		}
+		else if (type == 2) {
+			
+			
 			Ptr<ORB> detector = ORB::create(300, 1.1, 16, 31, 0, 2, cv::ORB::HARRIS_SCORE, 31, 70);
 			vector<KeyPoint> kp;
 
@@ -426,7 +525,7 @@ string AKAZEMatching(string path, vector<string>imgDataSet, int descriptor_size,
 	return "result/good2/save_0.jpg";
 }
 
-void ORBMatching(int descriptor_size, int descriptor_channels,
+string ORBMatching(std::string path, std::vector<std::string>imgDataSet, int descriptor_size, int descriptor_channels,
 	float threshold, int nOctaves, int nOctaveLayers)
 {
 	cout << "orb";
@@ -443,20 +542,16 @@ void ORBMatching(int descriptor_size, int descriptor_channels,
 	vector<float> verifi;
 	vector<int> goods;
 	//train images
-	for (int i = 0; i < 10; i++) {
+	
 
-		feature = ORBb(feature, spath + train[i] + ".jpg", mspath + train[i] + ".jpg", 750, 750, 1, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaveLayers);
+	feature = ORBb(feature, path, 750, 750, 1, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaveLayers);
 		cout << "img 1 size" << (int)feature.ReturnImg1().size() << "\n";
-	}
+	
 
 	for (int i = 0; i < 26; i++) {
-		cout << path1;
-		cout << imgs[i];
-		feature = ORBb(feature, path1 + imgs[i] + ".jpg", mpath + imgs[i] + ".jpg", 750, 750, 2, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaveLayers);
+		feature = ORBb(feature, imgDataSet[i], 750, 750, 2, descriptor_size, descriptor_channels, threshold, nOctaves, nOctaveLayers);
 		cout << "img 2 size" << (int)feature.ReturnImg2().size() << "\n";
 	}
-	cout << "img 1 size" << (int)feature.ReturnImg1().size() << "\n";
-	cout << "img 2 size" << (int)feature.ReturnImg2().size() << "\n";
 
 	////Images
 	for (int j = 0; j < (int)feature.ReturnImg1().size(); j++) {
@@ -483,15 +578,17 @@ void ORBMatching(int descriptor_size, int descriptor_channels,
 
 			for (int i = 0; i < goods.size(); i++) {
 				auto [photo_matches, percent] = BF(nr, goods[i], feature, 0.75f, 1);
-
+				feature.addfinalImg(feature.ReturnImg2()[goods[i]]);
+				imwrite("result/good2/save_0.jpg", feature.ReturnImg2()[goods[i]]);
 				imwrite("result/good/save_" + to_string(nr) + ".jpg", photo_matches);
 				nr++;
 			}
 		}
 	}
+	return "result/good2/save_0.jpg";
 }
 
-void KAZEMatching(bool extended, bool upright,
+string KAZEMatching(std::string path, std::vector<std::string>imgDataSet, bool extended, bool upright,
 	float threshold, int nOctaves, int nOctaveLayers)
 {
 	cout << "kaze";
@@ -508,11 +605,11 @@ void KAZEMatching(bool extended, bool upright,
 	vector<float> verifi;
 	vector<int> goods;
 	//train images
-	for (int i = 0; i < 10; i++) {
-		feature = KAZEe(feature, spath + train[i] + ".jpg", mspath + train[i] + ".jpg", 750, 750, 1, extended, upright, threshold, nOctaves, nOctaveLayers, KAZE::DIFF_PM_G2);
-	}
+	
+	feature = KAZEe(feature, path, 750, 750, 1, extended, upright, threshold, nOctaves, nOctaveLayers, KAZE::DIFF_PM_G2);
+	
 	for (int i = 0; i < 26; i++) {
-		feature = KAZEe(feature, path1 + imgs[i] + ".jpg", mpath + imgs[i] + ".jpg", 750, 750, 2, extended, upright, threshold, nOctaves, nOctaveLayers, KAZE::DIFF_PM_G2);
+		feature = KAZEe(feature, imgDataSet[i], 750, 750, 2, extended, upright, threshold, nOctaves, nOctaveLayers, KAZE::DIFF_PM_G2);
 	}
 	////Images
 	for (int j = 0; j < (int)feature.ReturnImg1().size(); j++) {
@@ -536,15 +633,17 @@ void KAZEMatching(bool extended, bool upright,
 
 			for (int i = 0; i < goods.size(); i++) {
 				auto [photo_matches, percent] = BF(nr, goods[i], feature, 0.75f, 1);
-
+				feature.addfinalImg(feature.ReturnImg2()[goods[i]]);
+				imwrite("result/good2/save_0.jpg", feature.ReturnImg2()[goods[i]]);
 				imwrite("result/good/save_" + to_string(nr) + ".jpg", photo_matches);
 				nr++;
 			}
 		}
 	}
+	return "result/good2/save_0.jpg";
 }
 
-void SIFTMatching(int nFeatures, int nOctaveLayers, double contrastThreshold, 
+string SIFTMatching(std::string path, std::vector<std::string>imgDataSet, int nFeatures, int nOctaveLayers, double contrastThreshold,
 	double edgeThreshold,
 	double sigma)
 {
@@ -562,12 +661,12 @@ void SIFTMatching(int nFeatures, int nOctaveLayers, double contrastThreshold,
 	vector<float> verifi;
 	vector<int> goods;
 	//train images
-	for (int i = 0; i < 10; i++) {
-		feature = FT::SIFT(feature, spath + train[i] + ".jpg", mspath + train[i] + ".jpg", 750, 750, 1, nFeatures, nOctaveLayers, contrastThreshold, edgeThreshold, sigma);
-	}
+	
+	feature = FT::SIFT(feature, path, 750, 750, 1, nFeatures, nOctaveLayers, contrastThreshold, edgeThreshold, sigma);
+	
 
 	for (int i = 0; i < 26; i++) {
-		feature = FT::SIFT(feature, path1 + imgs[i] + ".jpg", mpath + imgs[i] + ".jpg", 750, 750, 2, nFeatures, nOctaveLayers, contrastThreshold, edgeThreshold, sigma);
+		feature = FT::SIFT(feature, imgDataSet[i], 750, 750, 2, nFeatures, nOctaveLayers, contrastThreshold, edgeThreshold, sigma);
 	}
 	////Images
 	for (int j = 0; j < (int)feature.ReturnImg1().size(); j++) {
@@ -591,12 +690,14 @@ void SIFTMatching(int nFeatures, int nOctaveLayers, double contrastThreshold,
 
 			for (int i = 0; i < goods.size(); i++) {
 				auto [photo_matches, percent] = BF(nr, goods[i], feature, 0.75f, 1);
-
+				feature.addfinalImg(feature.ReturnImg2()[goods[i]]);
+				imwrite("result/good2/save_0.jpg", feature.ReturnImg2()[goods[i]]);
 				imwrite("result/good/save_" + to_string(nr) + ".jpg", photo_matches);
 				nr++;
 			}
 		}
 	}
+	return "result/good2/save_0.jpg";
 }
 
 
